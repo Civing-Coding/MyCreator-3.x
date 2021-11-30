@@ -7,10 +7,10 @@ const { ccclass, property } = _decorator;
 export class DragComponent extends Component {
 
 
-    @property(Node)
+    @property({ tooltip: '拖拽目标', type: Node })
     target: Node[] = [];
 
-    @property(Vec2)
+    @property({ tooltip: '如果不填，使用物体本身的size作为范围。', type: Vec2 })
     offset: any = v2(0, 0);
 
     @property(Vec3)
@@ -37,10 +37,13 @@ export class DragComponent extends Component {
         this.startListener();
         this._opacity = this.getComponent(UIOpacity) || this.addComponent(UIOpacity);
         this.zIndex = this.node.getSiblingIndex();
-        this.orginPos = this.node.getPosition();
+        this.orginPos = this.node.getWorldPosition();
 
         for (let i in this.target) {
-            this.setTargetPos(this.target[i].position.x, this.target[i].position.y, this.offset.x, this.offset.y);
+            let uiTransform = this.target[i].getComponent(UITransform);
+            this.setTargetPos(this.target[i].worldPosition.x, this.target[i].worldPosition.y,
+                this.offset.x == 0 ? uiTransform.width : this.offset.x,
+                this.offset.y == 0 ? uiTransform.height : this.offset.y);
         }
     }
 
@@ -62,7 +65,8 @@ export class DragComponent extends Component {
     }
 
     touchMove(e: EventTouch) {
-        this.node.setPosition(v3(this.node.position.x + e.getUIDelta().x, this.node.position.y + e.getUIDelta().y, 0));
+        let tmp = this.node.worldPosition;
+        this.node.setWorldPosition(tmp.x + e.getUIDelta().x, tmp.y + e.getUIDelta().y, 0);
     }
 
     touchEnd() {
@@ -70,13 +74,13 @@ export class DragComponent extends Component {
         this.node.setSiblingIndex(this.zIndex);
 
         for (let i in this.targetRange) {
-            if (this.targetRange[i].contains(v2(this.node.position.x, this.node.position.y))) {
+            if (this.targetRange[i].contains(v2(this.node.worldPosition.x, this.node.worldPosition.y))) {
                 this.dragEnd(true, i);
                 return;
             }
         }
 
-        this.node.setPosition(this.orginPos.clone());
+        this.node.setWorldPosition(this.orginPos.clone());
         this.dragEnd(false, '');
 
     }
@@ -84,7 +88,10 @@ export class DragComponent extends Component {
     dragEnd(over: Boolean, rangId: string) {
         // console.log('拖拽到指定地点', over, rangId);
         if (over) {
-            this.node.position = this.dragEndPosition;
+            console.log('over');
+            let endPos = new Vec3();
+            Vec3.add(endPos, this.target[rangId].worldPosition, this.dragEndPosition);
+            this.node.setWorldPosition(endPos);
             this.endListener();
             EventHandler.emitEvents(this.dragSuccess_cb, rangId);
         } else {
@@ -105,14 +112,6 @@ export class DragComponent extends Component {
         this.node.off(Node.EventType.TOUCH_MOVE, this.touchMove, this);
         this.node.off(Node.EventType.TOUCH_END, this.touchEnd, this);
         this.node.off(Node.EventType.TOUCH_CANCEL, this.touchEnd, this);
-    }
-
-    ok(args: any) {
-        console.log('ok' + args);
-    }
-
-    no(args: any) {
-        console.log('no' + args);
     }
 }
 
