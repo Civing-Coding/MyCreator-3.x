@@ -1,11 +1,13 @@
 
-import { _decorator, Component } from 'cc';
+import { _decorator, Component, EventHandler } from 'cc';
 const { ccclass, property } = _decorator;
 
 
 @ccclass('VideoTouch')
 export class VideoTouch extends Component {
 
+    @property({ type: EventHandler })
+    call_functions = [];
 
     start() {
         let container = document.querySelector('#Cocos3dGameContainer') as HTMLDivElement;
@@ -21,6 +23,7 @@ export class VideoTouch extends Component {
         div.style['z-index'] = '99999';
         div.addEventListener('click', (e) => {
             document.querySelector('video')!.play();
+            EventHandler.emitEvents(this.call_functions);
             div.remove();
         })
     }

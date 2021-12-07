@@ -27,7 +27,7 @@ export class MutexControl extends Component {
 
     closeAll() {
         this._curIndex = null;
-        this.objList.filter(x => x!.active = false)
+        this.objList.map(x => x!.active = false)
     }
 
     closeCurItem() {

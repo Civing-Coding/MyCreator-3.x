@@ -10,8 +10,8 @@ export class DragComponent extends Component {
     @property({ tooltip: '拖拽目标', type: Node })
     target: Node[] = [];
 
-    @property({ tooltip: '如果不填，使用物体本身的size作为范围。', type: Vec2 })
-    offset: any = v2(0, 0);
+    @property({ tooltip: '如果不填，使用物体本身的size作为范围。' })
+    offset = v2(0, 0);
 
     @property(Vec3)
     dragEndPosition: Vec3 = v3(0, 0, 0);
