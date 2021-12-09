@@ -1,0 +1,71 @@
+// Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: kawaseBlur-vs:vert
+      frag: kawaseBlur-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties: &props
+        texSize:      { value: [0,0],     inspector: { displayName : "图片大小"    }}
+        pixelOffset:  { value: 0.5,       inspector: { displayName : "模糊度"      }}
+}%
+
+CCProgram kawaseBlur-vs %{
+  precision highp float;
+  #include <cc-global>
+
+  in vec3 a_position;
+  in vec2 a_texCoord;
+
+  out vec4 color;
+  out vec2 uv0;
+
+  vec4 vert () {
+
+    vec4 pos = vec4(a_position, 1);
+    pos = cc_matViewProj * pos;
+    uv0 = a_texCoord;
+
+    return pos;
+  }
+}%
+
+CCProgram kawaseBlur-fs %{
+  precision highp float;
+  #include <embedded-alpha>
+  #include <alpha-test>
+
+  in vec2 uv0;
+  #pragma builtin(local)
+  layout(set = 2, binding = 10) uniform sampler2D cc_spriteTexture;
+
+  uniform Tex {
+    vec2  texSize;
+    float pixelOffset;
+  };
+
+  vec4 frag () {
+
+    vec4 o = vec4(0, 0, 0, 0);
+    o += CCSampleWithAlphaSeparated(cc_spriteTexture, uv0);
+    o += CCSampleWithAlphaSeparated(cc_spriteTexture, uv0 + vec2(-1, -1) / texSize * pixelOffset);
+    o += CCSampleWithAlphaSeparated(cc_spriteTexture, uv0 + vec2(1, -1) / texSize * pixelOffset);
+    o += CCSampleWithAlphaSeparated(cc_spriteTexture, uv0 + vec2(-1, 1) / texSize * pixelOffset);
+    o += CCSampleWithAlphaSeparated(cc_spriteTexture, uv0 + vec2(1, 1) / texSize * pixelOffset);
+    o *= .2;
+    return o;
+    
+  }
+}%
+
+

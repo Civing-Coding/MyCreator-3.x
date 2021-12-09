@@ -1,0 +1,88 @@
+// Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: rippleFluxay-vs:vert
+      frag: rippleFluxay-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+}%
+
+CCProgram rippleFluxay-vs %{
+  precision highp float;
+  #include <cc-global>
+
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 v_color;
+  out vec2 v_uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+    pos = cc_matViewProj * pos;
+    v_uv0 = a_texCoord;
+    v_color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram rippleFluxay-fs %{
+  precision highp float;
+  #include <embedded-alpha>
+  #include <alpha-test>
+  #include <output>
+
+  #define TAU 6.12
+  #define MAX_ITER 5  //最大迭代次数
+
+  in vec4 v_color;
+  in vec2 v_uv0;
+  #pragma builtin(local)
+  layout(set = 2, binding = 10) uniform sampler2D cc_spriteTexture;
+
+  uniform props {
+    vec4  UVoffset;
+    float rotated;
+  };
+
+  vec4 frag () {
+    float u_time = cc_time.x * .5 + 5.;
+    vec2 p = mod(v_uv0 * TAU, TAU) - 250.0;
+    vec2 i = vec2(p);
+    float c = 1.0;
+    float inten = .0065;
+
+    for (int n = 0; n < MAX_ITER; n++) 
+    {
+      float t =  u_time * (1.0 - (3.5 / float(n+1)));
+      i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(1.5*t + i.x));
+      c += 1.0/length(vec2(p.x / (cos(i.x+t)/inten),p.y / (cos(i.y+t)/inten)));
+    }
+    c /= float(MAX_ITER);
+    c = 1.17-pow(c, 1.4);
+    vec4 tex = CCSampleWithAlphaSeparated(cc_spriteTexture,v_uv0);
+    vec3 colour = clamp(vec3(pow(abs(c), 20.0)) + vec3(0.0, 0.0, .0), 0.0, tex.a);
+
+    // 混合波光
+    float alpha = c * tex[3];  
+    tex[0] += colour[0] * alpha; 
+    tex[1] += colour[1] * alpha; 
+    tex[2] += colour[2] * alpha; 
+    vec4 o = vec4(1,1,1,1);
+    o *= tex;
+    return o;
+  }
+}%

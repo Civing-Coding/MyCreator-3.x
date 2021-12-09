@@ -1,0 +1,87 @@
+// Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: gaussianSimple-vs:vert
+      frag: gaussianSimple-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        power:         { value: 0.01,         inspector: { displayName: "强度"     }}
+}%
+
+CCProgram gaussianSimple-vs %{
+  precision highp float;
+  #include <cc-global>
+
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 v_color;
+  out vec2 v_uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+    pos = cc_matViewProj * pos;
+    v_uv0 = a_texCoord;
+    v_color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram gaussianSimple-fs %{
+  precision highp float;
+  #include <embedded-alpha>
+  #include <alpha-test>
+  #include <output>
+
+  in vec2 v_uv0;
+  #pragma builtin(local)
+  layout(set = 2, binding = 10) uniform sampler2D cc_spriteTexture;
+
+  uniform props {
+    float power;
+  };
+
+  vec3 gaussianBlur( sampler2D diffuseMap, float blurAmt, vec2 v_uv) {
+    float gOffset[5];
+    gOffset[0] = 0.0;
+    gOffset[1] = 1.0;
+    gOffset[2] = 2.0;
+    gOffset[3] = 3.0;
+    gOffset[4] = 4.0;
+
+    float gWeight[5];
+    gWeight[0] = 0.2270270270;
+    gWeight[1] = 0.1945945946;
+    gWeight[2] = 0.1216216216;
+    gWeight[3] = 0.0540540541;
+    gWeight[4] = 0.0162162162;
+
+    vec3 baseDiffuse = SRGBToLinear(CCSampleWithAlphaSeparated(diffuseMap, v_uv).rgb);
+    for( int i = 0; i < 5; i++ ){
+      baseDiffuse += SRGBToLinear(CCSampleWithAlphaSeparated(diffuseMap, v_uv + vec2(gOffset[i] * 0.01 * blurAmt, 0.0)).rgb) * gWeight[i];
+      baseDiffuse += SRGBToLinear(CCSampleWithAlphaSeparated(diffuseMap, v_uv - vec2(gOffset[i] * 0.01 * blurAmt, 0.0)).rgb) * gWeight[i];
+      baseDiffuse += SRGBToLinear(CCSampleWithAlphaSeparated(diffuseMap, v_uv + vec2(0.0, gOffset[i] * 0.01 * blurAmt)).rgb) * gWeight[i];
+      baseDiffuse += SRGBToLinear(CCSampleWithAlphaSeparated(diffuseMap, v_uv - vec2(0.0, gOffset[i] * 0.01 * blurAmt)).rgb) * gWeight[i];
+    }
+    return baseDiffuse /3.;
+  }
+
+  vec4 frag () {
+    vec4 o = vec4(1, 1, 1, 1);
+    o *= vec4(gaussianBlur(cc_spriteTexture, power, v_uv0), CCSampleWithAlphaSeparated(cc_spriteTexture, v_uv0).a);
+    return o;
+  }
+}%

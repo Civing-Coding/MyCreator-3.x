@@ -1,0 +1,84 @@
+// Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: water-vs:vert
+      frag: water-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        mainTexture:  { value: white }
+        iOffset:      { value: [0.04, 0.04], inspector: { displayName : "uv偏移值"    } }
+        speedOffset:  { value: [0.5 , 0.5 ], inspector: { displayName : "时间偏移值"  } }
+}%
+
+CCProgram water-vs %{
+  precision highp float;
+  #include <cc-global>
+
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 color;
+  out vec2 uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+    pos = cc_matViewProj * pos;
+    uv0 = a_texCoord;
+    color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram water-fs %{
+  precision highp float;
+  #include <embedded-alpha>
+  #include <alpha-test>
+  #include <output>
+
+  in vec4 color;
+
+  #if USE_TEXTURE
+    in vec2 uv0;
+    #pragma builtin(local)
+    layout(set = 2, binding = 10) uniform sampler2D cc_spriteTexture;
+  #endif
+
+  uniform sampler2D mainTexture;
+  uniform Tex {
+    vec2 iOffset;
+    vec2 speedOffset;
+  };
+
+  vec4 frag () {
+    vec4 o = vec4(1, 1, 1, 1);
+
+    #if USE_TEXTURE
+
+      vec2 uv = uv0;
+      uv.x += cc_time.x * speedOffset.x;
+      uv.y += cc_time.y * speedOffset.y;
+
+      vec4 tx = CCSampleWithAlphaSeparated(mainTexture, uv+ uv0 * 8.);
+      vec2 uv1 = uv; 
+      uv1.x = tx.r * iOffset.x;
+      uv1.y = tx.g * iOffset.y;
+      o *= CCSampleWithAlphaSeparated( cc_spriteTexture, uv1 + uv0);
+    #endif
+
+    o *= color;
+    return o;
+  }
+}%

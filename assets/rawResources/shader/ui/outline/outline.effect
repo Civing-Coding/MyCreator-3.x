@@ -1,0 +1,114 @@
+// Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: outline-vs:vert
+      frag: outline-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        width:         { value: 0.1,         inspector: { displayName: "流光宽度"     }}
+        vcolor:        { value: [1,1,1,0],   inspector: { displayName: "颜色"         }}
+}%
+
+CCProgram outline-vs %{
+  precision highp float;
+  #include <cc-global>
+
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 v_color;
+  out vec2 v_uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+    pos = cc_matViewProj * pos;
+    v_uv0 = a_texCoord;
+    v_color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram outline-fs %{
+  precision highp float;
+  #include <embedded-alpha>
+  #include <alpha-test>
+  #include <output>
+
+  in vec4 v_color;
+  in vec2 v_uv0;
+  #pragma builtin(local)
+  layout(set = 2, binding = 10) uniform sampler2D cc_spriteTexture;
+
+  uniform props {
+    vec4  vcolor;
+    float width;
+  };
+
+    //检查pos点是否需要描边
+  bool checkIsMakeOutline(vec2 pos){
+    //alpha检测值
+    float alpha = 0.1;
+    vec4 color = CCSampleWithAlphaSeparated(cc_spriteTexture, pos);
+    if(color.a <= alpha || width == 0.0)return false;
+ 
+    //检测当前点周围的8个点的alpha值
+    color = CCSampleWithAlphaSeparated(cc_spriteTexture, pos + vec2(0, width));
+    if(color.a <= alpha)return true;
+    color = CCSampleWithAlphaSeparated(cc_spriteTexture, pos + vec2(width, width));
+    if(color.a <= alpha)return true;
+    color = CCSampleWithAlphaSeparated(cc_spriteTexture, pos + vec2(width, 0));
+    if(color.a <= alpha)return true;
+    color = CCSampleWithAlphaSeparated(cc_spriteTexture, pos + vec2(width, -width));
+    if(color.a <= alpha)return true;
+    color = CCSampleWithAlphaSeparated(cc_spriteTexture, pos + vec2(0, -width));
+    if(color.a <= alpha)return true;
+    color = CCSampleWithAlphaSeparated(cc_spriteTexture, pos + vec2(-width, -width));
+    if(color.a <= alpha)return true;
+    color = CCSampleWithAlphaSeparated(cc_spriteTexture, pos + vec2(-width, 0));
+    if(color.a <= alpha)return true;
+    color = CCSampleWithAlphaSeparated(cc_spriteTexture, pos + vec2(-width, width));
+    if(color.a <= alpha)return true;
+    
+    //当前点已是纹理边缘
+    if(pos.x <= width || pos.x >= 1.0 - width)return true;
+    if(pos.y <= width || pos.y >= 1.0 - width)return true;
+ 
+    return false;
+  }
+ 
+
+  vec4 frag () {
+    vec4 o = vec4(1, 1, 1, 1);
+ 
+    #if USE_TEXTURE
+      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, v_uv0);
+      #if CC_USE_ALPHA_ATLAS_TEXTURE
+        o.a *= CCSampleWithAlphaSeparated(cc_spriteTexture, v_uv0 + vec2(0, 0.5)).r;
+      #endif
+    #endif
+ 
+    o *= v_color;
+ 
+    ALPHA_TEST(o);
+ 
+    if(checkIsMakeOutline(v_uv0)){
+      //检查到v_uv0点需要描边，直接改变颜色值
+      o.rgb = vec3(vcolor.r, vcolor.g, vcolor.b);
+    }
+ 
+    return o;
+  }
+}%

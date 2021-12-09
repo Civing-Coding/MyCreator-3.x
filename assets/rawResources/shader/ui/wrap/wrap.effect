@@ -1,0 +1,70 @@
+// Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: wrap-vs:vert
+      frag: wrap-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        iOffset:      { value: [0.04, 0.04], inspector: { displayName : "uv偏移值"    } }
+}%
+
+CCProgram wrap-vs %{
+  precision highp float;
+  #include <cc-global>
+
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 v_color;
+  out vec2 v_uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+    pos = cc_matViewProj * pos;
+    v_uv0 = a_texCoord;
+    v_color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram wrap-fs %{
+  precision highp float;
+  #include <embedded-alpha>
+  #include <alpha-test>
+  #include <output>
+
+  #define TAU 6.12
+  #define MAX_ITER 5  //最大迭代次数
+
+  in vec4 v_color;
+  in vec2 v_uv0;
+  #pragma builtin(local)
+  layout(set = 2, binding = 10) uniform sampler2D cc_spriteTexture;
+
+  uniform props {
+    vec2  iOffset;
+  };
+
+  vec4 frag () {
+    vec4 o = vec4(1,1,1,1);
+    vec2 uv = v_uv0;
+    float time = mod(cc_time.x, 360.) * 3.;
+    uv.x += (sin(uv.y * 30.0 + time) / 30.0 * iOffset[0]);
+    uv.y += (sin(uv.x * 30.0 + time) / 30.0 * iOffset[1]);
+    o *= CCSampleWithAlphaSeparated( cc_spriteTexture , uv);
+    return o;
+  }
+}%

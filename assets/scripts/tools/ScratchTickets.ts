@@ -13,9 +13,6 @@ export class ScratchTickets extends Component {
     @property({ tooltip: '画笔半径' })
     radius: number = 20;
 
-    @property({ tooltip: '阙值' })
-    offsetValue: number = 40;
-
     @property(EventHandler)
     callBack: EventHandler[] = [];
 
@@ -54,28 +51,51 @@ export class ScratchTickets extends Component {
         this.node.on(Node.EventType.TOUCH_MOVE, this.touch, this);
         this.node.on(Node.EventType.TOUCH_END, this.touchEnd, this);
 
+
+    }
+
+    clear() {
+        this._checkList.fill(false);
+        this.mask.graphics.clear();
     }
 
     touch(event: EventTouch) {
         let p = event.getUILocation();
         let graphics = this.mask.graphics;
+        graphics.lineWidth = this.radius * 2;
+        graphics.lineCap = Graphics.LineCap.ROUND;
+        graphics.lineJoin = Graphics.LineJoin.ROUND;
         let v3p = this.uiCamera.convertToUINode(v3(p.x, p.y, 0), this.node);
         let distance = !this._lastPoint ? 0 : Vec3.distance(this._lastPoint, v3p);
-        console.log(distance);
         if (distance > 1) {
             graphics.moveTo(this._lastPoint.x, this._lastPoint.y);
-            graphics.lineTo(v3p.x - this.radius, v3p.y - this.radius);
+            graphics.lineTo(v3p.x, v3p.y);
+            graphics.stroke();
             graphics.fill();
         } else {
             graphics.roundRect(v3p.x - this.radius, v3p.y - this.radius, 2 * this.radius, 2 * this.radius, this.radius || 0);
             graphics.fill();
         }
         this._lastPoint = v3p.clone();
+        if (this.checkPoint(v2(v3p.x, v3p.y))) {
+            //完成
+            EventHandler.emitEvents(this.callBack);
+        }
     }
 
     touchEnd(event: EventTouch) {
         this.touch(event);
         this._lastPoint = null;
+    }
+
+    checkPoint(p: Vec2) {
+        let count = 0;
+        for (let i in this._pList) {
+            let dis = Vec2.distance(p, this._pList[i]);
+            this._checkList[i] = dis < this.radius ? true : this._checkList[i];
+            this._checkList[i] && count++;
+        }
+        return count == this._checkList.length;
     }
 
 }

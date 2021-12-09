@@ -1,0 +1,72 @@
+// Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: plant-vs:vert
+      frag: plant-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        speed:         { value: 2.0,  inspector: { displayName: "速度" }}
+        bendFactor:    { value: 0.2,  inspector: {displayName: "混合系数"}}
+        topOrBottom:   { value: 1.0,  inspector: {displayName: "上1.0下0"}}
+}%
+
+CCProgram plant-vs %{
+  precision highp float;
+  #include <cc-global>
+
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 v_color;
+  out vec2 v_uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+    pos = cc_matViewProj * pos;
+    v_uv0 = a_texCoord;
+    v_color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram plant-fs %{
+  precision highp float;
+  #include <embedded-alpha>
+  #include <alpha-test>
+  #include <output>
+
+  in vec4 v_color;
+  in vec2 v_uv0;
+  #pragma builtin(local)
+  layout(set = 2, binding = 10) uniform sampler2D cc_spriteTexture;
+
+  uniform props {
+    float speed;
+    float bendFactor;
+    float topOrBottom;
+  };
+
+  vec4 frag () {
+    float height = 1.0 - v_uv0.y;
+    if(topOrBottom == 0.0){
+      height = v_uv0.y;
+    }
+    float offset = pow(height, 2.5);
+    offset *= sin(cc_time.x * speed) * bendFactor;
+    vec4 o = CCSampleWithAlphaSeparated(cc_spriteTexture, vec2(v_uv0.x + offset, v_uv0.y));
+    return o;
+  }
+}%

@@ -1,0 +1,123 @@
+// Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: gaussianBlur1-vs:vert
+      frag: gaussianBlur1-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties: &props
+        texSize:      { value: [0,0],     inspector: { displayName : "图片大小"    }}
+        pixelOffset:  { value: 0.5,       inspector: { displayName : "模糊度"      }}
+}%
+
+CCProgram gaussianBlur1-vs %{
+  precision highp float;
+  #include <cc-global>
+
+  in vec3 a_position;
+  in vec2 a_texCoord;
+
+  out vec4 color;
+  out vec2 uv0;
+
+  vec4 vert () {
+
+    vec4 pos = vec4(a_position, 1);
+    pos = cc_matViewProj * pos;
+    uv0 = a_texCoord;
+
+    return pos;
+  }
+}%
+
+CCProgram gaussianBlur1-fs %{
+  precision highp float;
+  #include <embedded-alpha>
+  #include <alpha-test>
+
+  in vec2 uv0;
+  #pragma builtin(local)
+  layout(set = 2, binding = 10) uniform sampler2D cc_spriteTexture;
+
+  uniform props {
+    vec2  texSize;
+    float pixelOffset;
+  };
+
+  vec4 gaussian(sampler2D tex, vec2 UV, vec2 Size, float Intensity) 
+	{
+	    vec4 sum = vec4(0);
+	    vec2 offset = vec2(0.0);
+	    vec2 normalizedSize = vec2(1.0 / Size);
+	    offset = normalizedSize * vec2(-2.0, -2.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 1.0;
+	    offset = normalizedSize * vec2(-1.0, -2.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 4.0;
+	    offset = normalizedSize * vec2(0.0, -2.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 7.0;
+	    offset = normalizedSize * vec2(1.0, -2.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 4.0;
+	    offset = normalizedSize * vec2(2.0, -2.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 1.0;
+	    offset = normalizedSize * vec2(-2.0, -1.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 4.0;
+	    offset = normalizedSize * vec2(-1.0, -1.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 16.0;
+	    offset = normalizedSize * vec2(0.0, -1.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 26.0;
+	    offset = normalizedSize * vec2(1.0, -1.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 16.0;
+	    offset = normalizedSize * vec2(2.0, -1.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 4.0;
+	    offset = normalizedSize * vec2(-2.0, 0.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 7.0;
+	    offset = normalizedSize * vec2(-1.0, 0.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 26.0;
+	    offset = normalizedSize * vec2(0.0, 0.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 41.0;
+	    offset = normalizedSize * vec2(1.0, 0.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 26.0;
+	    offset = normalizedSize * vec2(2.0, 0.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 7.0;
+	    offset = normalizedSize * vec2(-2.0, 1.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 4.0;
+	    offset = normalizedSize * vec2(-1.0, 1.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 16.0;
+	    offset = normalizedSize * vec2(0.0, 1.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 26.0;
+	    offset = normalizedSize * vec2(1.0, 1.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 16.0;
+	    offset = normalizedSize * vec2(2.0, 1.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 4.0;
+	    offset = normalizedSize * vec2(-2.0, 2.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 1.0;
+	    offset = normalizedSize * vec2(-1.0, 2.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 4.0;
+	    offset = normalizedSize * vec2(0.0, 2.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 7.0;
+	    offset = normalizedSize * vec2(1.0, 2.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 4.0;
+	    offset = normalizedSize * vec2(2.0, 2.0) * Intensity;
+	    sum += texture(tex, UV + offset) * 1.0;               
+	    return vec4((sum / 273.0).rgb, texture(tex, UV).a);
+	}
+
+  vec4 frag () {
+
+    vec4 o = vec4(0);
+    o += gaussian(cc_spriteTexture, uv0, texSize, pixelOffset);
+    return o;
+  }
+}%
+
+

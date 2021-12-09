@@ -1,0 +1,76 @@
+// Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: mosaic-vs:vert
+      frag: mosaic-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        hgsize:         { value: 0.01,         inspector: { displayName: "强度"     }}
+        vgsize:         { value: 0.01,         inspector: { displayName: "强度"     }}
+}%
+
+CCProgram mosaic-vs %{
+  precision highp float;
+  #include <cc-global>
+
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 v_color;
+  out vec2 v_uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+    pos = cc_matViewProj * pos;
+    v_uv0 = a_texCoord;
+    v_color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram mosaic-fs %{
+  precision highp float;
+  #include <embedded-alpha>
+  #include <alpha-test>
+  #include <output>
+
+  in vec2 v_uv0;
+  #pragma builtin(local)
+  layout(set = 2, binding = 10) uniform sampler2D cc_spriteTexture;
+
+  uniform props {
+    float hgsize;
+    float vgsize;
+  };
+
+  float pixelateIt (float uv, float size){
+    return (uv-mod(uv,size)) + (size/2.0);
+  }
+
+
+  vec4 frag () {
+    vec4 o = vec4(1, 1, 1, 1);
+
+    #if USE_TEXTURE
+      vec2 c = v_uv0;
+      c.x = pixelateIt(c.x, hgsize);
+      c.y = pixelateIt(c.y, vgsize); 
+      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, c);
+    #endif
+
+    return o;
+  }
+}%
