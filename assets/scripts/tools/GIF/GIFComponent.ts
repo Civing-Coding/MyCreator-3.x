@@ -55,7 +55,7 @@ export class GIFComponent extends Component {
         this.localPath = gif.toString();
         this.loadUrl(this.localPath);
     }
-    @property({ type: String, visible() { return this.loadMode == LOADTYPE.REMOTE; } })
+    @property({ visible() { return this.loadMode == LOADTYPE.REMOTE; } })
     _remoteUrl: string = ''
 
     set remoteUrl(v: string) {
@@ -65,7 +65,7 @@ export class GIFComponent extends Component {
         return this._remoteUrl;
     }
 
-    @property({ type: String, visible() { return this.loadMode == LOADTYPE.RESOURCES; } })
+    @property({ visible() { return this.loadMode == LOADTYPE.RESOURCES; } })
     _resourcesPath: string = '';
     set resourcesPath(v: string) {
         this._resourcesPath = v;
@@ -95,7 +95,7 @@ export class GIFComponent extends Component {
 
             this.loadResources();
         } else {
-            console.log(this.localPath, ' localpath')
+            // console.log(this.localPath, ' localpath')
             let path = this.localPath == '' ? this._remoteUrl : this.localPath;
 
             this.loadUrl(path);
@@ -114,8 +114,8 @@ export class GIFComponent extends Component {
         if (EDITOR) return;
         GIFCache.getInstance();
 
-        resources.load(this._resourcesPath,Asset, (err, data: any) => {
-            console.log(err, data, ' =====loadData');
+        resources.load(this._resourcesPath, Asset, (err, data: any) => {
+            // console.log(err, data, ' =====loadData');
             if (err) {
                 console.error(err, '加载失败');
 
@@ -130,13 +130,13 @@ export class GIFComponent extends Component {
 
     //远程或者本地加载
     loadUrl(url) {
-        console.log(url, ' ==url ', this.remoteUrl)
+        // console.log(url, ' ==url ', this.remoteUrl)
         if (url == '') return;
 
         GIFCache.getInstance();
 
         assetManager.loadAny({ url: url }, (err, data: any) => {
-            console.log(err, data, '  data');
+            // console.log(err, data, '  data');
             if (err) {
                 return;
             }

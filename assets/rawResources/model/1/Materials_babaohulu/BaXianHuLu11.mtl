@@ -36,9 +36,9 @@
     {
       "mainColor": {
         "__type__": "cc.Color",
-        "r": 189,
-        "g": 137,
-        "b": 137,
+        "r": 219,
+        "g": 186,
+        "b": 186,
         "a": 255
       },
       "SpecularIntensity": 0.493,

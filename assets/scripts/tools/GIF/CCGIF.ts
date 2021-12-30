@@ -6,7 +6,7 @@ import { GIFCache } from "./GIF";
 // @executeInEditMode
 @requireComponent(Sprite)
 export default class CCGIF extends Component {
-    @property(String)
+    @property
     path: string = '';
     public delays = [];
     public gifSp: Sprite;
@@ -20,7 +20,7 @@ export default class CCGIF extends Component {
         GIFCache.getInstance();
 
         resources.load(this.path, (err, data: any) => {
-            console.log(err, data);
+            // console.log(err, data);
             if (err) {
                 console.error(err,'加载失败');
                 return;
@@ -34,7 +34,7 @@ export default class CCGIF extends Component {
         GIFCache.getInstance();
 
         assetManager.loadAny({ url: url }, (err, data: any) => {
-            console.log(err, data, '  data');
+            // console.log(err, data, '  data');
             if (err) {
                 return;
             }

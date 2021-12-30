@@ -1,4 +1,4 @@
-import { BaseNode, Color, director, dynamicAtlasManager, ImageAsset, SpriteFrame, Texture2D, v2, Vec2, Node } from "cc";
+import { BaseNode, Color, director, dynamicAtlasManager, ImageAsset, SpriteFrame, Texture2D, v2, Vec2, Node, assetManager, math } from "cc";
 
 export class Utils {
 
@@ -222,7 +222,7 @@ export class Utils {
         return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
     }
 
-    //通过角度获取弧度
+    //通过角度获取弧度   math.toRadian  math.toDegree
     static angleToRadian(angle: number): number {
         return angle * Math.PI / 180;
     }
@@ -256,6 +256,28 @@ export class Utils {
         let px = x - (arx1 - arx) * width;
         let py = y - (ary1 - ary) * height;
         return [px, py];
+    }
+
+    //将RGBA颜色分量转换为一个数值表示的颜色，颜色分量为0~255之间的值
+    static convertToNumber(r: number, g: number, b: number, a: number = 255): number {
+        return ((r & 0xfe) << 23) | (g << 16) | (b << 8) | a;
+    }
+
+    //将十六进制的颜色转换为RGBA分量表示的颜色
+    static convertToRGBA(color: number): { r: number, g: number, b: number, a: number } {
+        return {
+            r: (color & 0xef000000) >> 23,
+            g: (color & 0x00ff0000) >> 16,
+            b: (color & 0x0000ff00) >> 8,
+            a: (color & 0x000000ff),
+        };
+    }
+
+    //设置同时下载数减少等待时间
+    static changeAssetManagerMax() {
+        //默认只有6 太少了  只能修改非原生环境
+        assetManager.downloader.maxConcurrency = 20;//下载时的最大并发数
+        assetManager.downloader.maxRequestsPerFrame = 20;//下载时每帧可以启动的最大请求数
     }
 
 }
