@@ -1,0 +1,40 @@
+{
+  "ver": "1.2.1",
+  "importer": "render-texture",
+  "imported": true,
+  "uuid": "977fafea-4334-43f0-ba47-cd8498a3f5c8",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {
+    "f9941": {
+      "importer": "rt-sprite-frame",
+      "uuid": "977fafea-4334-43f0-ba47-cd8498a3f5c8@f9941",
+      "displayName": "model-rt",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "imageUuidOrDatabaseUri": "977fafea-4334-43f0-ba47-cd8498a3f5c8",
+        "width": 2048,
+        "height": 1024
+      },
+      "ver": "1.0.0",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "redirect": "977fafea-4334-43f0-ba47-cd8498a3f5c8@f9941",
+    "width": 2048,
+    "height": 1024,
+    "anisotropy": 0,
+    "minfilter": "linear",
+    "magfilter": "linear",
+    "mipfilter": "none",
+    "wrapModeS": "repeat",
+    "wrapModeT": "repeat"
+  }
+}

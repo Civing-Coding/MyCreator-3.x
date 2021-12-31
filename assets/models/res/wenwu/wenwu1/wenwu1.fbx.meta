@@ -1,0 +1,199 @@
+{
+  "ver": "2.1.10",
+  "importer": "fbx",
+  "imported": true,
+  "uuid": "f1183baf-def2-47e3-90ee-b53b9fbda6a1",
+  "files": [],
+  "subMetas": {
+    "11d28": {
+      "importer": "gltf-mesh",
+      "uuid": "f1183baf-def2-47e3-90ee-b53b9fbda6a1@11d28",
+      "displayName": "",
+      "id": "11d28",
+      "name": "wenwu.mesh",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.1.0",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "cb51e": {
+      "importer": "gltf-mesh",
+      "uuid": "f1183baf-def2-47e3-90ee-b53b9fbda6a1@cb51e",
+      "displayName": "",
+      "id": "cb51e",
+      "name": "xian.mesh",
+      "userData": {
+        "gltfIndex": 1
+      },
+      "ver": "1.1.0",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "a6b77": {
+      "importer": "gltf-mesh",
+      "uuid": "f1183baf-def2-47e3-90ee-b53b9fbda6a1@a6b77",
+      "displayName": "",
+      "id": "a6b77",
+      "name": "cicun.mesh",
+      "userData": {
+        "gltfIndex": 2
+      },
+      "ver": "1.1.0",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "43c71": {
+      "importer": "gltf-embeded-image",
+      "uuid": "f1183baf-def2-47e3-90ee-b53b9fbda6a1@43c71",
+      "displayName": "",
+      "id": "43c71",
+      "name": "file1.image",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.3",
+      "imported": true,
+      "files": [
+        ".png",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "d20e9": {
+      "importer": "texture",
+      "uuid": "f1183baf-def2-47e3-90ee-b53b9fbda6a1@d20e9",
+      "displayName": "",
+      "id": "d20e9",
+      "name": "file1.texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": false,
+        "imageUuidOrDatabaseUri": "db://assets/models/res/wenwu/wenwu1/Materials_wenwu1/16cm.png"
+      },
+      "ver": "1.0.21",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "8d883": {
+      "importer": "gltf-material",
+      "uuid": "f1183baf-def2-47e3-90ee-b53b9fbda6a1@8d883",
+      "displayName": "",
+      "id": "8d883",
+      "name": "lambert1.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "55b43": {
+      "importer": "gltf-material",
+      "uuid": "f1183baf-def2-47e3-90ee-b53b9fbda6a1@55b43",
+      "displayName": "",
+      "id": "55b43",
+      "name": "lambert3.material",
+      "userData": {
+        "gltfIndex": 1
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "7a3ca": {
+      "importer": "gltf-material",
+      "uuid": "f1183baf-def2-47e3-90ee-b53b9fbda6a1@7a3ca",
+      "displayName": "",
+      "id": "7a3ca",
+      "name": "lambert2.material",
+      "userData": {
+        "gltfIndex": 2
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "51ff9": {
+      "importer": "gltf-scene",
+      "uuid": "f1183baf-def2-47e3-90ee-b53b9fbda6a1@51ff9",
+      "displayName": "",
+      "id": "51ff9",
+      "name": "wenwu1.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [
+      {
+        "name": "file1",
+        "remap": "db://assets/models/res/wenwu/wenwu1/Materials_wenwu1/16cm.png",
+        "uri": "f1183baf-def2-47e3-90ee-b53b9fbda6a1@43c71"
+      }
+    ],
+    "legacyFbxImporter": false,
+    "redirect": "f1183baf-def2-47e3-90ee-b53b9fbda6a1@51ff9",
+    "assetFinder": {
+      "meshes": [
+        "f1183baf-def2-47e3-90ee-b53b9fbda6a1@11d28",
+        "f1183baf-def2-47e3-90ee-b53b9fbda6a1@cb51e",
+        "f1183baf-def2-47e3-90ee-b53b9fbda6a1@a6b77"
+      ],
+      "skeletons": [],
+      "textures": [
+        "f1183baf-def2-47e3-90ee-b53b9fbda6a1@d20e9"
+      ],
+      "materials": [
+        "f1183baf-def2-47e3-90ee-b53b9fbda6a1@8d883",
+        "f1183baf-def2-47e3-90ee-b53b9fbda6a1@55b43",
+        "f1183baf-def2-47e3-90ee-b53b9fbda6a1@7a3ca"
+      ],
+      "scenes": [
+        "f1183baf-def2-47e3-90ee-b53b9fbda6a1@51ff9"
+      ]
+    },
+    "dumpMaterials": false,
+    "materialDumpDir": "db://assets/wenwu1/Materials_wenwu1",
+    "fbx": {
+      "preferLocalTimeSpan": false
+    }
+  }
+}
