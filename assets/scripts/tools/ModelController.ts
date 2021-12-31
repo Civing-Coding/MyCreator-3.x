@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, EventTouch, Vec3, Quat, clamp, CCFloat, tween,Tween,UIOpacity} from "cc";
+import { _decorator, Component, Node, EventTouch, Vec3, Quat, clamp, CCFloat, tween, Tween, UIOpacity, director } from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("PartShow")
@@ -19,8 +19,7 @@ export class PartShow {
 
 @ccclass("ModelController")
 export class ModelController extends Component {
-    @property(Node)
-    clickArea: Node = null;
+
     @property(Node)
     cameraNode: Node = null;//--------x
     @property(Node)
@@ -75,12 +74,14 @@ export class ModelController extends Component {
     private modelTween: Tween<Node>;
 
     start() {
-        this.clickArea.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
-        this.clickArea.on(Node.EventType.TOUCH_END, this.onTouchEnd, this);
-        this.clickArea.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
-        this.clickArea.on(Node.EventType.MOUSE_WHEEL, this.onMouseWheel, this);
-        this.clickArea.on(Node.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
-        this.clickArea.on(Node.EventType.MOUSE_UP, this.onMouseUp, this);
+        let clickArea = director.getScene().getChildByName('Canvas');
+
+        clickArea.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
+        clickArea.on(Node.EventType.TOUCH_END, this.onTouchEnd, this);
+        clickArea.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
+        clickArea.on(Node.EventType.MOUSE_WHEEL, this.onMouseWheel, this);
+        clickArea.on(Node.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
+        clickArea.on(Node.EventType.MOUSE_UP, this.onMouseUp, this);
         this._rot.set(this.cameraNode.eulerAngles);
 
         this.delta = 0;
@@ -222,7 +223,7 @@ export class ModelController extends Component {
     }
     update() {
         if (this.isEnable == false) return;
-        
+
         if (this.isLerp) {
             if (this.delta > 0.0001) {
                 this.delta = this.delta * 0.95;
@@ -266,9 +267,8 @@ export class ModelController extends Component {
         this.xMaxAngle = max;
     }
 
-    showPart(index)
-    {
-        if(index < 0 || index >= this.partShowList.length) return;
+    showPart(index) {
+        if (index < 0 || index >= this.partShowList.length) return;
         let data = this.partShowList[index];
         if (this.cameraNodeTween) {
             this.cameraNodeTween.stop();

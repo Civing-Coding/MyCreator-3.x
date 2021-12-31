@@ -14,6 +14,7 @@
     "__type__": "cc.Node",
     "_name": "Model",
     "_objFlags": 0,
+    "__editorExtras__": {},
     "_parent": null,
     "_children": [
       {
@@ -130,7 +131,7 @@
       "__type__": "cc.Vec3",
       "x": 0,
       "y": 0,
-      "z": 7.711
+      "z": 7
     },
     "_lrot": {
       "__type__": "cc.Quat",
@@ -222,10 +223,10 @@
     "_staticSettings": {
       "__id__": 7
     },
+    "_illuminanceHDR": 60000,
     "_illuminance": 60000,
-    "_id": "",
     "_illuminanceLDR": 1.5625,
-    "_illuminanceHDR": 60000
+    "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
@@ -954,7 +955,7 @@
       "y": 0,
       "z": 0
     },
-    "xMaxAngle": 0,
+    "xMaxAngle": 30,
     "xMinAngle": 0
   },
   {
