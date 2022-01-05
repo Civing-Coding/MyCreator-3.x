@@ -214,7 +214,7 @@ export class Utils {
 
     //获取两点角度
     static getAngle(p1: Vec2, p2: Vec2): number {
-        return Math.atan((p2.y - p1.y) / (p2.x - p1.x));
+        return Math.atan((p2.y - p1.y) / (p2.x - p1.x)) * 180 / Math.PI;
     }
 
     //两点距离
