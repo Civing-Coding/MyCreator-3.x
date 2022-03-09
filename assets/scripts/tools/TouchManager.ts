@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, EventTouch, v3, Vec3, UITransform} from 'cc';
+import { _decorator, Component, Node, EventTouch, v3, Vec3, UITransform, EventHandler } from 'cc';
 import { EventManager } from './EventManager';
 import { Utils } from './Utils';
 const { ccclass, property } = _decorator;
@@ -8,6 +8,24 @@ const HOLD_TIME = 3;
 
 @ccclass('TouchManager')
 export class TouchManager extends Component {
+
+    @property({ type: [EventHandler] })
+    public touchStartCall: EventHandler[] = [];
+
+    @property({ type: [EventHandler] })
+    public twicePressCall: EventHandler[] = [];
+
+    @property({ type: [EventHandler] })
+    public longPress: EventHandler[] = [];
+
+    @property({ type: [EventHandler] })
+    public moveCall: EventHandler[] = [];
+
+    @property({ type: [EventHandler] })
+    public zoomCall: EventHandler[] = [];
+
+    @property({ type: [EventHandler] })
+    public endCall: EventHandler[] = [];
 
     private _moveDetail = { x: 0, y: 0, pos: Vec3.zero, orgin: Vec3.zero };
     private _orginDistance = 0;
@@ -43,10 +61,12 @@ export class TouchManager extends Component {
             this._zoom = true;
         }
         this.node.emit('t_start', this._moveDetail);
+        EventHandler.emitEvents(this.touchStartCall, this._moveDetail);
         this.schedule(this.checkHold, 0.1);
         let tm = new Date().getTime();
         if (tm - this._lastPressTimes <= 500) {
             this.node.emit('t_TwicePress');
+            EventHandler.emitEvents(this.twicePressCall);
         }
         this._lastPressTimes = tm;
     }
@@ -57,6 +77,7 @@ export class TouchManager extends Component {
             this.unschedule(this.checkHold);
             this._holdTime += 0.1;
             this.node.emit('t_LongPress');
+            EventHandler.emitEvents(this.longPress);
         }
     }
 
@@ -71,6 +92,7 @@ export class TouchManager extends Component {
             this._moveDetail.x = tx;
             this._moveDetail.y = ty;
             !!tx && !!ty && this.node.emit('t_move', this._moveDetail);
+            EventHandler.emitEvents(this.moveCall, this._moveDetail);
         } else if (touches.length == 2) {
             //处理两指缩放
             this._zoom = true;
@@ -82,6 +104,7 @@ export class TouchManager extends Component {
             } else {
                 let zoom = distance - this._orginDistance > 0 ? 1 : -1;
                 this.node.emit('t_zoom', zoom);
+                EventHandler.emitEvents(this.zoomCall);
             }
         }
     }
@@ -93,5 +116,6 @@ export class TouchManager extends Component {
         this._moveDetail = { x: 0, y: 0, pos: Vec3.zero, orgin: Vec3.zero };
         this._zoom = false;
         EventManager.getInstance().emit('t_end');
+        EventHandler.emitEvents(this.endCall);
     }
 }

@@ -11,28 +11,33 @@ const { ccclass, property } = _decorator;
 export class NodeEx extends Component {
 
     //active: 1  0
-    setActive(_event: TouchEvent, active: string) {
-        this.node.active = active == '1';
+    setActive(event: any, active: string) {
+        let args = active || event;
+        this.node.active = args == '1';
     }
 
     //scale:3,3,1
-    setScale(_event: TouchEvent, scale: string) {
-        this.node.setScale(this.getArgsV3(scale));
+    setScale(event: any, scale: string) {
+        let args = scale || event;
+        this.node.setScale(this.getArgsV3(args));
     }
 
     //elur:30
-    setElur(_event: TouchEvent, elur: string) {
-        this.node.setRotationFromEuler(0, 0, Number(elur));
+    setElur(event: any, elur: string) {
+        let args = elur || event;
+        this.node.setRotationFromEuler(0, 0, Number(args));
     }
 
     //anchor: 0.5,0.5
-    setAnctor(_event: TouchEvent, anchor: string) {
-        this.node.getComponent(UITransform).setAnchorPoint(this.getArgsV2(anchor));
+    setAnctor(event: any, anchor: string) {
+        let args = anchor || event;
+        this.node.getComponent(UITransform).setAnchorPoint(this.getArgsV2(args));
     }
 
     //size： 100,100
-    setContentSize(_event: TouchEvent, size: string) {
-        this.node.getComponent(UITransform).setContentSize(this.getArgsV2(size).x, this.getArgsV2(size).y);
+    setContentSize(event: any, size: string) {
+        let args = size || event;
+        this.node.getComponent(UITransform).setContentSize(this.getArgsV2(args).x, this.getArgsV2(args).y);
     }
 
     protected getArgsV3(str: string) {

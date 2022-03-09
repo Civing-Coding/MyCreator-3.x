@@ -179,7 +179,7 @@ export default class CaptureUtils {
         // region.texOffset.x = region.texOffset.y = 0;
         texExtent.width = width;
         texExtent.height = height;
-        cc.director.root.device.copyFramebufferToBuffer(texture.window.framebuffer, arrayBuffer, [region]);
+        (cc.director.root.device as any).copyFramebufferToBuffer(texture.window.framebuffer, arrayBuffer, [region]);
         return new Uint8Array(arrayBuffer);
     }
 

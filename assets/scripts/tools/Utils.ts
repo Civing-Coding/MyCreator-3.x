@@ -280,4 +280,12 @@ export class Utils {
         assetManager.downloader.maxRequestsPerFrame = 20;//下载时每帧可以启动的最大请求数
     }
 
+    //触发手机震动 time:1000
+    //浏览器支持情况：pc端 chrome和火狐支持，ie、opera、Safari不支持
+    //移动端 Android和火狐是支持的，而苹果手机是不会震动的~~
+    static vibrate(time: number) {
+        let supportsVibrate = "vibrate" in navigator;
+        supportsVibrate && navigator.vibrate(time);
+    }
+
 }
