@@ -1,4 +1,4 @@
-import { BaseNode, Color, director, dynamicAtlasManager, ImageAsset, SpriteFrame, Texture2D, v2, Vec2, Node, assetManager, math } from "cc";
+import { BaseNode, Color, director, dynamicAtlasManager, ImageAsset, SpriteFrame, Texture2D, v2, Vec2, Node, assetManager, math, v3 } from "cc";
 
 export class Utils {
 
@@ -288,4 +288,66 @@ export class Utils {
         supportsVibrate && navigator.vibrate(time);
     }
 
+    /**
+    * Spherical
+    * @param radius Float 半径值，或者说从该点到原点的Euclidean distance（欧几里得距离，即直线距离）。默认值为1.0。
+    * @param phi Float 与 y (up) 轴的极坐标角（以弧度为单位）。 默认值为 0。
+    * @param theta Float 绕 y (up) 轴的赤道角（以弧度为单位）。 默认值为 0。极点（φ phi）位于正 y 轴和负 y 轴上。赤道（θ theta）从正 z 开始。 
+    * @returns 
+    */
+    static getSphericalPos(radius: number, phi: number, theta: number) {
+        var sinPhiRadius = Math.sin(phi) * radius;
+        return v3(sinPhiRadius * Math.sin(theta), Math.cos(phi) * radius, sinPhiRadius * Math.cos(theta));
+    }
+
+    /**
+     * fibonacci_sphere
+     * 均匀分布在球上
+     * @param samples :采样数
+     * @returns vector3 array
+     */
+    static fibonacci_sphere(samples: number) {
+        let points = [];
+        let phi = (Math.sqrt(5) + 1) / 2 - 1;
+
+        for (let i = 1; i <= samples; i++) {
+            let z = (2 * i - 1) / samples - 1;
+            let rad = Math.sqrt(1 - z * z);
+            let theta = 2 * Math.PI * i * phi;
+            let x = rad * Math.cos(theta);
+            let y = rad * Math.sin(theta);
+            points.push(v3(x, y, z).normalize());
+        }
+        return points;
+    }
+
+    /**
+     * 斐波那契数列
+     * @param n int
+     * @returns 
+     */
+    static fibonacci_list(n: number) {
+        let fib_val = [0, 1]
+        let len = fib_val.length;
+        for (let i = len; i <= n; i++) {
+            fib_val.push(fib_val[i - 1] + fib_val[i - 2])
+        }
+        return fib_val
+    }
+
+    /** 螺旋线
+     *  @param samples  采样数
+     *  @param radius  半径
+     *  @param curvity 曲线密度
+     * 阿基米德螺线： r = 15*i, ang = 12
+     * 双曲螺线： r = 200/i, ang = 18
+     */
+    static spiral(samples: number, radius: number, curvity: number = 0.1) {
+        let list = [];
+        for (let i = curvity; i < samples * curvity; i = i + curvity) {
+            let r = radius * Math.pow(i, 0.5);
+            list.push(v2(r * Math.sin(i), r * Math.cos(i)));
+        }
+        return list;
+    }
 }

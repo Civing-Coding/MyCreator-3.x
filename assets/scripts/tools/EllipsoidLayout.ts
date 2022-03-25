@@ -1,5 +1,6 @@
 
-import { _decorator, Component, Quat, Node, v3, CCFloat, Sprite, color, CCInteger, Vec3, UITransform, EventTouch, CCBoolean, Mat4, quat, mat4 } from 'cc';
+import { _decorator, Component, Quat, Node, v3, CCFloat, Sprite, color, CCInteger, Vec3, UITransform, EventTouch, CCBoolean, Mat4, quat, mat4, Vec2, lerp } from 'cc';
+import { Utils } from './Utils';
 const { ccclass, property } = _decorator;
 
 @ccclass('EllipsoidLayout')
@@ -13,7 +14,7 @@ export class EllipsoidLayout extends Component {
     maxScaler: number = 3;
 
     @property(CCInteger)
-    minScaler: number = 1;
+    minScaler: number = 0;
 
     @property(Vec3)
     autoRotateV3 = v3();
@@ -28,9 +29,12 @@ export class EllipsoidLayout extends Component {
     private rDetail = v3();
     private _touch = false;
     private _curQuat = new Quat();
+    private _lerpTime = 1;
     start() {
+        console.log(Utils.fibonacci_list(100));
+
         this._cList = this.node.children;
-        let posList = this.fibonacci_sphere(this._cList.length);
+        let posList = Utils.fibonacci_sphere(this._cList.length);
         for (let i in this._cList) {
             let pos: Vec3 = v3();
             Vec3.multiplyScalar(pos, posList[i], this.radius);
@@ -60,12 +64,15 @@ export class EllipsoidLayout extends Component {
 
     touchEnd(event: EventTouch) {
         this._touch = false;
+        this._lerpTime = 0;
     }
 
     update(dt: number) {
-
+        this._lerpTime += dt * 0.5;
+        this._lerpTime = this._lerpTime >= 1 ? 1 : this._lerpTime;
         const axis = v3(-this.rDetail.y, this.rDetail.x, 0); //旋转轴
-        const rad = this.rDetail.length() * 1e-2; //旋转角度
+        let rad = this.rDetail.length() * 1e-2; //旋转角度
+        rad = this._touch ? rad : lerp(rad, 0, this._lerpTime);
         const quat_cur = this.node.getRotation();
         Quat.rotateAround(this._curQuat, quat_cur, axis.normalize(), rad);
         this.node.setRotation(this._curQuat);
@@ -82,40 +89,5 @@ export class EllipsoidLayout extends Component {
             this._cList[i].setScale(scaler, scaler, scaler);
         }
     }
-
-    /**
-     * Spherical
-     * @param radius Float 半径值，或者说从该点到原点的Euclidean distance（欧几里得距离，即直线距离）。默认值为1.0。
-     * @param phi Float 与 y (up) 轴的极坐标角（以弧度为单位）。 默认值为 0。
-     * @param theta Float 绕 y (up) 轴的赤道角（以弧度为单位）。 默认值为 0。极点（φ phi）位于正 y 轴和负 y 轴上。赤道（θ theta）从正 z 开始。 
-     * @returns 
-     */
-    getSphericalPos(radius: number, phi: number, theta: number) {
-        var sinPhiRadius = Math.sin(phi) * radius;
-        return v3(sinPhiRadius * Math.sin(theta), Math.cos(phi) * radius, sinPhiRadius * Math.cos(theta));
-    }
-
-    /**
-     * fibonacci_sphere
-     * 均匀分布在球上
-     * @param samples :采样数
-     * @returns vector3 array
-     */
-    fibonacci_sphere(samples: number) {
-        let points = [];
-        let phi = (Math.sqrt(5) + 1) / 2 - 1;
-
-        for (let i = 1; i <= samples; i++) {
-            let z = (2 * i - 1) / samples - 1;
-            let rad = Math.sqrt(1 - z * z);
-            let theta = 2 * Math.PI * i * phi;
-            let x = rad * Math.cos(theta);
-            let y = rad * Math.sin(theta);
-            points.push(v3(x, y, z).normalize());
-        }
-        return points;
-    }
-
-
 
 }
