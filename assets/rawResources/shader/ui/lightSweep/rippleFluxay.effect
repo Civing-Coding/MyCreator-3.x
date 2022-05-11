@@ -45,8 +45,8 @@ CCProgram rippleFluxay-fs %{
   #include <alpha-test>
   #include <output>
 
-  #define TAU 6.12
-  #define MAX_ITER 5  //最大迭代次数
+  #pragma define TAU 6.12
+  #pragma define MAX_ITER 5  //最大迭代次数
 
   in vec4 v_color;
   in vec2 v_uv0;
