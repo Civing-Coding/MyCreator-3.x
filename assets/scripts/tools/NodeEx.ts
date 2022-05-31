@@ -40,6 +40,18 @@ export class NodeEx extends Component {
         this.node.getComponent(UITransform).setContentSize(this.getArgsV2(args).x, this.getArgsV2(args).y);
     }
 
+    //Position： 100,100,100
+    setPosition(event: any, size: string) {
+        let args = size || event;
+        this.node.setPosition(this.getArgsV3(args));
+    }
+
+    //Position： 100,100,100
+    setWorldPosition(event: any, size: string) {
+        let args = size || event;
+        this.node.setWorldPosition(this.getArgsV3(args));
+    }
+
     protected getArgsV3(str: string) {
         let list = str.split(',');
         return v3(Number(list[0]), Number(list[1]), Number(list[2]));

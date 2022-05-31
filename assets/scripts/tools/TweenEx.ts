@@ -74,6 +74,14 @@ export class TweenEx extends Component {
         this.hideAction().start();
     }
 
+    showImmediately() {
+        this.showActionImmediately();
+    }
+
+    hideImmediately() {
+        this.hideActionImmediately();
+    }
+
     excute() {
         if (this.delayTime > 0) {
             this.scheduleOnce(() => {
@@ -150,6 +158,48 @@ export class TweenEx extends Component {
             case TweenType.MoveBy:
                 tw = tween(this.node)
                     .by(this.duration, { position: v3(-this.vec.x, -this.vec.y, -this.vec.z) })
+                break;
+            default:
+                break;
+        }
+        return tw;
+    }
+
+    protected showActionImmediately() {
+        let tw = null;
+        switch (this.tweenType) {
+            case TweenType.Opacity:
+                this._UIOpacity = this.opacity;
+                break;
+            case TweenType.Scale:
+                this.node.scale = this.vec;
+                break;
+            case TweenType.MoveTo:
+                this.node.position = this.vec;
+                break;
+            case TweenType.MoveBy:
+                this.node.position = this.node.position.add(this.vec);
+                break;
+            default:
+                break;
+        }
+        return tw;
+    }
+
+    protected hideActionImmediately() {
+        let tw = null;
+        switch (this.tweenType) {
+            case TweenType.Opacity:
+                this._UIOpacity = this._opacity;
+                break;
+            case TweenType.Scale:
+                this.node.scale = this._scale;
+                break;
+            case TweenType.MoveTo:
+                this.node.position = this._pos;
+                break;
+            case TweenType.MoveBy:
+                this.node.position = this.node.position.add(this.vec.negative());
                 break;
             default:
                 break;
