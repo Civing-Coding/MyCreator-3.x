@@ -165,7 +165,7 @@ export class TweenEx extends Component {
         return tw;
     }
 
-    protected showActionImmediately() {
+    showActionImmediately() {
         let tw = null;
         switch (this.tweenType) {
             case TweenType.Opacity:
@@ -186,7 +186,7 @@ export class TweenEx extends Component {
         return tw;
     }
 
-    protected hideActionImmediately() {
+    hideActionImmediately() {
         let tw = null;
         switch (this.tweenType) {
             case TweenType.Opacity:

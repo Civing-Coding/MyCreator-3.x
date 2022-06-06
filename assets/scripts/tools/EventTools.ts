@@ -7,6 +7,7 @@ const EVENT_TYPE = Enum({
     EVENT_MANAGER: 0,
     NODE: 1,
     COMPONENT: 2,
+    DELAY_DO: 3
 })
 
 const EVENT_COMPONENT_TYPE = Enum({
@@ -86,6 +87,20 @@ export default class EventTools extends Component {
     })
     eventName: string = "";
 
+    @property({
+        visible(this: any) {
+            return this.eventType == EVENT_TYPE.DELAY_DO;
+        }
+    })
+    playOnStart: boolean = false;
+
+    @property({
+        visible(this: any) {
+            return this.eventType == EVENT_TYPE.DELAY_DO;
+        }
+    })
+    delayTime: number = 0;
+
     @property({ type: [EventHandler] })
     call_functions = [];
 
@@ -106,6 +121,7 @@ export default class EventTools extends Component {
 
     start() {
         this.eventType == EVENT_TYPE.COMPONENT && this.componentType == EVENT_COMPONENT_TYPE.START && this.excute();
+        this.eventType == EVENT_TYPE.DELAY_DO && this.playOnStart && this.delayExcute();
     }
 
     onEnable() {
@@ -130,5 +146,11 @@ export default class EventTools extends Component {
 
     excute(args?: any) {
         EventHandler.emitEvents(this.call_functions, args);
+    }
+
+    delayExcute(args?: any) {
+        this.scheduleOnce(() => {
+            EventHandler.emitEvents(this.call_functions, args);
+        }, this.delayTime);
     }
 }
