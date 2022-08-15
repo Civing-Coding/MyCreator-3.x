@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, v3, v2, UITransform } from 'cc';
+import { _decorator, Component, Node, v3, v2, UITransform, UIOpacity } from 'cc';
 const { ccclass, property } = _decorator;
 
 /* 
@@ -50,6 +50,15 @@ export class NodeEx extends Component {
     setWorldPosition(event: any, size: string) {
         let args = size || event;
         this.node.setWorldPosition(this.getArgsV3(args));
+    }
+
+    //Opacity: 0
+    setOpacity(event: any, oapcity: string) {
+        if (oapcity != "") {
+            let op = parseInt(oapcity);
+            let com = this.getComponent(UIOpacity) || this.addComponent(UIOpacity);
+            com.opacity = op;
+        }
     }
 
     protected getArgsV3(str: string) {
