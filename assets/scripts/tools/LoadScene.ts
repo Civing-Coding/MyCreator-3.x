@@ -1,7 +1,8 @@
 import { _decorator, Component, Node, director, log } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 @ccclass('LoadScene')
+@menu('Tools/LoadScene')
 export class LoadScene extends Component {
 
     private _once: boolean = false;

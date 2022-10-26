@@ -1,6 +1,6 @@
 
 import { _decorator, Component, Node, Enum, EventHandler, CCInteger } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 const CounterType = Enum({
     ObjCounter: 0,
@@ -8,6 +8,7 @@ const CounterType = Enum({
 })
 
 @ccclass('Counter')
+@menu('Tools/Counter')
 export class Counter extends Component {
 
     @property({ type: CounterType })

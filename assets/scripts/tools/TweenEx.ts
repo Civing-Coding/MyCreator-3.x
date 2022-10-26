@@ -1,6 +1,7 @@
 
 import { _decorator, Component, Node, Enum, EventHandler, Tween, Vec3, v3, UITransform, UIOpacity, tween } from 'cc';
-const { ccclass, property } = _decorator;
+import { NodeEx } from './NodeEx';
+const { ccclass, property, menu, requireComponent } = _decorator;
 
 export const TweenType = Enum({
     Opacity: 0,
@@ -9,7 +10,11 @@ export const TweenType = Enum({
     MoveBy: 3,
 });
 
+
+
 @ccclass('TweenEx')
+@menu('Tools/TweenEx')
+@requireComponent(NodeEx)
 export class TweenEx extends Component {
 
     @property({ type: TweenType })
@@ -39,7 +44,7 @@ export class TweenEx extends Component {
     repeatTimes: number = -1;
 
     @property
-    playOnStart: Boolean = false;
+    playOnEnable: Boolean = false;
 
     @property({ type: [EventHandler] })
     endCallBack = [];
@@ -60,8 +65,8 @@ export class TweenEx extends Component {
         this._scale = this.node.scale.clone();
     }
 
-    start() {
-        if (this.playOnStart) {
+    onEnable() {
+        if (this.playOnEnable) {
             this.excute();
         }
     }

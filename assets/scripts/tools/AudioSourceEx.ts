@@ -1,7 +1,7 @@
 
 import { _decorator, AudioSource, Enum, EventHandler } from 'cc';
 import { StaticData } from './StaticData';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 export const AudioType = Enum({
     Music: 0,
@@ -9,6 +9,7 @@ export const AudioType = Enum({
 });
 
 @ccclass('AudioSourceEx')
+@menu('Tools/AudioSourceEx')
 export class AudioSourceEx extends AudioSource {
 
     @property({ type: AudioType })

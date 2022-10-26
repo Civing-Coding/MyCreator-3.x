@@ -1,9 +1,10 @@
 
 import { _decorator, Component, Node, EventHandler, error, UIOpacity, tween, Vec3, v3 } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 
 @ccclass('MutexControl')
+@menu('Tools/MutexControl')
 export class MutexControl extends Component {
 
     @property({ type: Node, tooltip: '互斥节点列表' })

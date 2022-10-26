@@ -1,9 +1,10 @@
 
 import { _decorator, Component, Label } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 
 @ccclass('StringType')
+@menu('Tools/StringType')
 export class StringType extends Component {
 
     @property({ tooltip: '每个字的时间' })

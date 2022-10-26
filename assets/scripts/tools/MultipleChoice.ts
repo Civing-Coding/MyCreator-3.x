@@ -1,10 +1,10 @@
 
 import { _decorator, Component, Node, Label, EventHandler, v3, CCBoolean, CCInteger, resources, error, Asset, math, AudioClip, Button, tween } from 'cc';
 import { AudioSourceEx } from './AudioSourceEx';
-import { Utils } from './Utils';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 @ccclass('MultipleChoice')
+@menu('Tools/MultipleChoice')
 export class MultipleChoice extends Component {
 
 

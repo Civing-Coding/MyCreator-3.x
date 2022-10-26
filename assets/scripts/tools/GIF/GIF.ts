@@ -1,6 +1,6 @@
 
 
-import { _decorator, SpriteFrame, Texture2D, RenderTexture, assetManager, loader, log, ImageAsset, game, find, Sprite } from 'cc';
+import { _decorator, SpriteFrame, Texture2D, RenderTexture, assetManager, loader, log, ImageAsset, game, find, Sprite, native } from 'cc';
 import { JSB } from 'cc/env';
 import LZW from "./LZW";
 export enum FileType {
@@ -91,10 +91,10 @@ class GIF {
     private decodeFrame(frame) {
         let imageData;
         // console.log(frame,'frame')
-        if(JSB){
+        if (JSB) {
             imageData = this._context.createImageData(frame.img.w, frame.img.h)
 
-        }else{
+        } else {
             imageData = this._context.getImageData(frame.img.x, frame.img.y, frame.img.w, frame.img.h)
 
         }
@@ -141,7 +141,7 @@ class GIF {
         let image = new Image();
         image.width = width;
         image.height = height;
-        image._data = data._data;
+        (image as any)._data = data._data;
         // console.log(data._data,'  ==imagedata==  ',htm)
         let imageAsset = new ImageAsset(image);
 
@@ -259,7 +259,7 @@ class GIF {
     }
     private decodeFrame2Texture(frame, index) {
         if (!this._context) {
-            this._canvas =document.createElement('canvas');
+            this._canvas = document.createElement('canvas');
             this._context = this._canvas.getContext('2d');
             this._canvas.width = frame.img.w;
             this._canvas.height = frame.img.h;
@@ -430,21 +430,21 @@ class GIFCache {
     static getInstance() {
         if (!GIFCache.instance) {
             GIFCache.instance = new GIFCache();
-            if(JSB){
-                assetManager.downloader.register('.gif', assetManager.downloader._downloaders['.binary']);
+            if (JSB) {
+                assetManager.downloader.register('.gif', (assetManager.downloader as any)._downloaders['.binary']);
 
-            }else{
+            } else {
                 assetManager.downloader.register('.gif', (url, options, onComplete) => {
                     // console.log("downloader", url);
-                    assetManager.downloader._downloaders[".bin"](url, options, (err, data) => {
-                      if (!err) {
-                        // CC_JSB
-                        if (typeof data === "string") {
-                          assetManager.parser.parse(url, data, ".bin", options, onComplete);
-                          return;
+                    (assetManager.downloader as any)._downloaders[".bin"](url, options, (err, data) => {
+                        if (!err) {
+                            // CC_JSB
+                            if (typeof data === "string") {
+                                assetManager.parser.parse(url, data, ".bin", options, onComplete);
+                                return;
+                            }
                         }
-                      }
-                      onComplete(err, data);
+                        onComplete(err, data);
                     });
                 })
 
@@ -454,17 +454,17 @@ class GIFCache {
             if (JSB) {
                 assetManager.parser.register('.gif', (file, options, onComplete) => {
                     let gif = new GIF();
-                    console.log('>>> jsb-file:',file);
-                    let buffer = jsb.fileUtils.getDataFromFile(file);
+                    console.log('>>> jsb-file:', file);
+                    let buffer = native.fileUtils.getDataFromFile(file);
                     // console.log(buffer,' >>> buffer')
                     gif.handle(buffer, onComplete);
                 })
             } else {
                 assetManager.parser.register('.gif', (file, options, onComplete) => {
                     let gif = new GIF();
-                    console.log('>>> web-file:',file);
+                    console.log('>>> web-file:', file);
                     let buffer = file;
-                    if(file.arrayBuffer){
+                    if (file.arrayBuffer) {
                         buffer = file.arrayBuffer();
                     }
                     gif.handle(buffer, onComplete)
@@ -563,9 +563,9 @@ export class FileHead {
     static IMAGE_PNG = "89504e47";
     static IMAGE_JPG = "ffd8ff";
     static IMAGE_GIF = "474946";
-// /**
-// * Webp
-// */
+    // /**
+    // * Webp
+    // */
     static RIFF = "52494646";
     static WEBP_RIFF = FileHead.RIFF;
     static WEBP_WEBP = "57454250";

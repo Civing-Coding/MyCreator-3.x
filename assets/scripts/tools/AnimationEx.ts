@@ -1,10 +1,11 @@
 
 import { _decorator, Component, Node, EventHandler, Animation, CCBoolean } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 
 
 @ccclass('AnimEx')
+@menu('Tools/AnimEx')
 export class AnimEx extends Component {
 
     //结束触发

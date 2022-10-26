@@ -1,9 +1,10 @@
 
 import { _decorator, Component, Node, UITransform, Sprite, SpriteFrame, Texture2D, ImageAsset, EventTouch, v3, Vec3, Enum, RenderTexture, Color, color } from 'cc';
 import DrawingBoard from './DrawingBoard';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 @ccclass('Painter')
+@menu('Tools/Painter')
 export class Painter extends Component {
 
     @property

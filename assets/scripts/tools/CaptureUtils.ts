@@ -7,6 +7,7 @@
 
 // 这种引入方式方便兼容2.X
 import * as cc from "cc";
+import { native } from "cc";
 
 /**
  * 矩形
@@ -194,7 +195,7 @@ export default class CaptureUtils {
 
         var data = CaptureUtils.readPixels(texture), width = texture.width, height = texture.height, url: string;
         if (cc.sys.isNative) {
-            let filePath = jsb.fileUtils.getWritablePath() + 'tmpImg.png';/* 临时文件名 */
+            let filePath = native.fileUtils.getWritablePath() + 'tmpImg.png';/* 临时文件名 */
             window['fsUtils'].writeFile(filePath, data);
             url = filePath;
         }

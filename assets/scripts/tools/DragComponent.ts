@@ -1,9 +1,10 @@
 
 import { _decorator, Component, Node, Vec2, v2, Vec3, v3, Rect, EventHandler, rect, UIOpacity, UITransform, EventTouch } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 
 @ccclass('DragComponent')
+@menu('Tools/DragComponent')
 export class DragComponent extends Component {
 
 

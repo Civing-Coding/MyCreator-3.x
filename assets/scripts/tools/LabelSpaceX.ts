@@ -1,9 +1,10 @@
 
 import { _decorator, Component, Label } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 
 @ccclass('LabelSpaceX')
+@menu('Tools/LabelSpaceX')
 export class LabelSpaceX extends Component {
 
     @property({ tooltip: '每个字间隔' })

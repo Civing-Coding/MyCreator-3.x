@@ -1,9 +1,10 @@
 
-import { _decorator, Component, Quat, Node, v3, CCFloat, Sprite, color, CCInteger, Vec3, UITransform, EventTouch, CCBoolean, Mat4, quat, mat4, Vec2, lerp } from 'cc';
+import { _decorator, Component, Quat, Node, v3, CCFloat, Sprite, color, CCInteger, Vec3, UITransform, EventTouch, CCBoolean, Vec2, lerp } from 'cc';
 import { Utils } from './Utils';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 @ccclass('EllipsoidLayout')
+@menu('Tools/EllipsoidLayout')
 export class EllipsoidLayout extends Component {
 
 
@@ -33,7 +34,7 @@ export class EllipsoidLayout extends Component {
     start() {
         console.log(Utils.fibonacci_list(100));
 
-        this._cList = this.node.children;
+        this._cList = [...this.node.children];
         let posList = Utils.fibonacci_sphere(this._cList.length);
         for (let i in this._cList) {
             let pos: Vec3 = v3();

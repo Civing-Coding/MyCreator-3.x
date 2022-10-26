@@ -1,8 +1,9 @@
 
 import { _decorator, Component, Node, v3, UIOpacity, EventTouch } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 @ccclass('CircleLayout')
+@menu('Tools/CircleLayout')
 export class CircleLayout extends Component {
 
     @property({ tooltip: '轴a' })

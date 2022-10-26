@@ -1,8 +1,9 @@
 import { _decorator, Component, Node, EventTouch, log } from 'cc';
 import { DollarRecognizer, Point } from './plugins/dollar';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 @ccclass('UnistrokeRecognizer')
+@menu('Tools/UnistrokeRecognizer')
 export class UnistrokeRecognizer extends Component {
 
     private _gesture: any = null;

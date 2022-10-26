@@ -1,7 +1,8 @@
 import { _decorator, Component, Label, lerp } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
-@ccclass
+@ccclass('NumberType')
+@menu('Tools/NumberType')
 export default class NumberType extends Component {
 
     @property

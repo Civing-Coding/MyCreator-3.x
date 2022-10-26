@@ -1,9 +1,10 @@
 
 import { _decorator, Component, EventHandler } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 
 @ccclass('VideoTouch')
+@menu('Tools/VideoTouch')
 export class VideoTouch extends Component {
 
     @property({ type: EventHandler })

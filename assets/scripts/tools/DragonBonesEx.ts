@@ -1,8 +1,9 @@
 
 import { _decorator, Component, Node, dragonBones, EventHandler, CCBoolean, CCString, Enum, ccenum } from 'cc';
-const { ccclass, property, requireComponent } = _decorator;
+const { ccclass, property, requireComponent, menu } = _decorator;
 
 @ccclass('DragonBonesEx')
+@menu('Tools/DragonBonesEx')
 @requireComponent(dragonBones.ArmatureDisplay)
 export class DragonBonesEx extends Component {
 

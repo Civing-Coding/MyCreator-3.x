@@ -1,7 +1,7 @@
 import { _decorator, Enum, Component, EventHandler, Node } from 'cc';
 import { EventManager } from "./EventManager";
 
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 const EVENT_TYPE = Enum({
     EVENT_MANAGER: 0,
@@ -44,6 +44,7 @@ const EVENT_NODE_TYPE = Enum({
 })
 
 @ccclass('EventTools')
+@menu('Tools/EventTools')
 export default class EventTools extends Component {
 
     @property({ type: EVENT_TYPE })

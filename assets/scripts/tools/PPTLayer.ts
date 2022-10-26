@@ -1,7 +1,6 @@
 import { Button, CCInteger, Component, instantiate, Prefab, resources, tween, _decorator, Animation, Node, UITransform, v3, EventHandler, view, Vec3 } from "cc";
 import { EventManager } from "./EventManager";
-
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 
 /*
@@ -10,6 +9,7 @@ const { ccclass, property } = _decorator;
  */
 
 @ccclass('PPTLayer')
+@menu('Tools/PPTLayer')
 export default class PPTLayer extends Component {
 
     @property(Node)

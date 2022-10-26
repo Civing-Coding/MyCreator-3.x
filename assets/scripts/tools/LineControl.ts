@@ -2,10 +2,11 @@
 import { _decorator, Component, Node, Rect, UITransform, EventTouch, Vec2, instantiate, v3, v2, Vec3, EventHandler, CCInteger, AudioClip } from 'cc';
 import { AudioSourceEx } from './AudioSourceEx';
 import { Utils } from './Utils';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 
 @ccclass('LineControl')
+@menu('Tools/LineControl')
 export class LineControl extends Component {
 
     @property(Node)
@@ -42,7 +43,7 @@ export class LineControl extends Component {
         this._objs = {};
         this._curLine = null;
         this._beginPos = null;
-        this._part = this.touchPanel.children;
+        this._part = [...this.touchPanel.children];
         this.linePr.removeAllChildren();
         for (let i in this._part) {
             let tmp = this._part[i];

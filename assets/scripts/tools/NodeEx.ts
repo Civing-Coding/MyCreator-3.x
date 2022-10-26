@@ -1,6 +1,6 @@
 
 import { _decorator, Component, Node, v3, v2, UITransform, UIOpacity } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 /* 
     因为EventHander的事件中找不到Node的相关操作 ，因此补充这个类 
@@ -8,6 +8,7 @@ const { ccclass, property } = _decorator;
 */
 
 @ccclass('NodeEx')
+@menu('Tools/NodeEx')
 export class NodeEx extends Component {
 
     //active: 1  0

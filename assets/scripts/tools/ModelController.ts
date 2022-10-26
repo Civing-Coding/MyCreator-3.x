@@ -1,5 +1,5 @@
 import { _decorator, Component, Node, EventTouch, Vec3, Quat, clamp, CCFloat, tween, Tween, UIOpacity, director } from "cc";
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 @ccclass("PartShow")
 export class PartShow {
@@ -18,6 +18,7 @@ export class PartShow {
 }
 
 @ccclass("ModelController")
+@menu('Tools/ModelController')
 export class ModelController extends Component {
 
     @property(Node)

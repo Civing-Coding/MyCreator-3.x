@@ -1,8 +1,9 @@
 
 import { _decorator, Component, EventHandler, Node, Mask, Vec2, v2, UITransform, EventTouch, Vec3, Camera, v3, Graphics, game, Game } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 @ccclass('ScratchTickets')
+@menu('Tools/ScratchTickets')
 export class ScratchTickets extends Component {
     @property(Mask)
     mask: Mask = null;
@@ -24,7 +25,7 @@ export class ScratchTickets extends Component {
     onLoad() {
         this._uiTransform = this.node.getComponent(UITransform);
         this.mask.type = Mask.Type.GRAPHICS_STENCIL;
-        this.mask.inverted = false;
+        this.mask.inverted = true;
 
         //addCheckPoint
         let pos = this.node.position;
@@ -56,12 +57,12 @@ export class ScratchTickets extends Component {
 
     clear() {
         this._checkList.fill(false);
-        this.mask.graphics.clear();
+        this.mask.getComponent(Graphics).clear();
     }
 
     touch(event: EventTouch) {
         let p = event.getUILocation();
-        let graphics = this.mask.graphics;
+        let graphics: Graphics = this.mask.getComponent(Graphics);
         graphics.lineWidth = this.radius * 2;
         graphics.lineCap = Graphics.LineCap.ROUND;
         graphics.lineJoin = Graphics.LineJoin.ROUND;

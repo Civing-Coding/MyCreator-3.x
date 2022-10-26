@@ -1,10 +1,11 @@
 
 import { _decorator, Component, Node, EventTouch, v3, UITransform, Sprite, EventHandler } from 'cc';
 import { Utils } from './Utils';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 
 @ccclass('LucencyClick')
+@menu('Tools/LucencyClick')
 export class LucencyClick extends Component {
 
     @property({ type: [EventHandler] })

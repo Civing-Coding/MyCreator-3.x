@@ -2,11 +2,12 @@
 import { _decorator, Component, Node, EventTouch, v3, Vec3, UITransform, EventHandler } from 'cc';
 import { EventManager } from './EventManager';
 import { Utils } from './Utils';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 const HOLD_TIME = 3;
 
 @ccclass('TouchManager')
+@menu('Tools/TouchManager')
 export class TouchManager extends Component {
 
     @property({ type: [EventHandler] })

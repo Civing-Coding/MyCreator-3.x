@@ -1,5 +1,5 @@
 import { _decorator, Component, game, math, input, EventMouse, EventKeyboard, EventTouch, KeyCode, Input } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, menu } = _decorator;
 const { Vec2, Vec3, Quat } = math;
 
 const v2_1 = new Vec2();
@@ -16,7 +16,8 @@ const KEYCODE = {
     SHIFT: KeyCode.SHIFT_LEFT,
 };
 
-@ccclass
+@ccclass('FirstPersonCamera')
+@menu('Tools/FirstPersonCamera')
 export class FirstPersonCamera extends Component {
 
     @property
