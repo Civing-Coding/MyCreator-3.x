@@ -54,11 +54,20 @@ export class NodeEx extends Component {
 
     //Opacity: 0
     setOpacity(event: any, oapcity: string) {
+        oapcity = oapcity || event;
         if (oapcity != "") {
             let op = parseInt(oapcity);
             let com = this.getComponent(UIOpacity) || this.addComponent(UIOpacity);
             com.opacity = op;
         }
+    }
+
+    //setEnabled
+    setComponentEnable(event: any, com: string) {
+        let args = com || event;
+        let arr = args.split(',');
+        if (arr.length > 1)
+            this.node.getComponent(arr[0]).enabled = arr[1] == "1";
     }
 
     protected getArgsV3(str: string) {

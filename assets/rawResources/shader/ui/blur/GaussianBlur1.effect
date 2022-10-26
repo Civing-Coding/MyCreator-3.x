@@ -22,7 +22,7 @@ CCEffect %{
 
 CCProgram gaussianBlur1-vs %{
   precision highp float;
-  #include <cc-global>
+  #include <builtin/uniforms/cc-global>
 
   in vec3 a_position;
   in vec2 a_texCoord;
@@ -42,8 +42,8 @@ CCProgram gaussianBlur1-vs %{
 
 CCProgram gaussianBlur1-fs %{
   precision highp float;
-  #include <embedded-alpha>
-  #include <alpha-test>
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
 
   in vec2 uv0;
   #pragma builtin(local)

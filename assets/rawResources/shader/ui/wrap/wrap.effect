@@ -21,7 +21,7 @@ CCEffect %{
 
 CCProgram wrap-vs %{
   precision highp float;
-  #include <cc-global>
+  #include <builtin/uniforms/cc-global>
 
   in vec3 a_position;
   in vec2 a_texCoord;
@@ -42,9 +42,9 @@ CCProgram wrap-vs %{
 
 CCProgram wrap-fs %{
   precision highp float;
-  #include <embedded-alpha>
-  #include <alpha-test>
-  #include <output>
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+  #include <legacy/output>
 
   #pragma define TAU 6.12
   #pragma define MAX_ITER 5  //最大迭代次数

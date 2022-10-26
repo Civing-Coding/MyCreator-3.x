@@ -22,7 +22,7 @@ CCEffect %{
 
 CCProgram mosaic-vs %{
   precision highp float;
-  #include <cc-global>
+  #include <builtin/uniforms/cc-global>
 
   in vec3 a_position;
   in vec2 a_texCoord;
@@ -43,9 +43,9 @@ CCProgram mosaic-vs %{
 
 CCProgram mosaic-fs %{
   precision highp float;
-  #include <embedded-alpha>
-  #include <alpha-test>
-  #include <output>
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+  #include <legacy/output>
 
   in vec2 v_uv0;
   #pragma builtin(local)

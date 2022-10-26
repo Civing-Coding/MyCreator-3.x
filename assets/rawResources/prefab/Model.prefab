@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.Prefab",
-    "_name": "",
+    "_name": "Model",
     "_objFlags": 0,
     "_native": "",
     "data": {
@@ -227,7 +227,11 @@
     "_illuminanceHDR": 60000,
     "_illuminance": 60000,
     "_illuminanceLDR": 1.5625,
-    "_id": ""
+    "_id": "",
+    "_shadowFixedArea": false,
+    "_csmLevel": 4,
+    "_csmLayerLambda": 0.75,
+    "_csmOptimizationMode": 2
   },
   {
     "__type__": "cc.CompPrefabInfo",

@@ -1,5 +1,5 @@
 {
-  "ver": "2.1.14",
+  "ver": "2.3.1",
   "importer": "fbx",
   "imported": true,
   "uuid": "1bcfa2aa-2014-4e0d-9886-9a38244e96fa",
@@ -59,7 +59,8 @@
     "dumpMaterials": true,
     "materialDumpDir": "db://assets/rawResources/model/1/Materials_babaohulu",
     "fbx": {
-      "preferLocalTimeSpan": false
+      "preferLocalTimeSpan": false,
+      "smartMaterialEnabled": false
     }
   }
 }
