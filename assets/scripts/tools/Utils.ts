@@ -350,4 +350,16 @@ export class Utils {
         }
         return list;
     }
+
+    /**
+     * 关闭当前网页页面 涵盖微信web
+     */
+    static closeWebPage() {
+        window.close();
+        let ua = window.navigator.userAgent;
+        let wechat = /MicroMessenger/i.test(ua);
+        if (ua && wechat) {
+            (window as any).WeixinJSBridge.call('closeWindow');
+        }
+    }
 }

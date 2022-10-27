@@ -20,7 +20,7 @@ export class EllipsoidLayout extends Component {
     @property(Vec3)
     autoRotateV3 = v3();
 
-    @property(CCBoolean)
+    @property
     useTouch = true;
 
     @property(Node)

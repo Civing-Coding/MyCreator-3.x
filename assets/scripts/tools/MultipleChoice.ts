@@ -14,10 +14,10 @@ export class MultipleChoice extends Component {
     @property(Node)
     choiceList: Node[] = [];
 
-    @property(CCBoolean)
+    @property
     useAnim: boolean = false;
 
-    @property(CCBoolean)
+    @property
     randomQuestion: boolean = false;
 
     @property(CCInteger)
