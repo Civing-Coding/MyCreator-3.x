@@ -8,6 +8,7 @@ export const TweenType = Enum({
     Scale: 1,
     MoveTo: 2,
     MoveBy: 3,
+    RotateTo: 4,
 });
 
 export const LoopType = Enum({
@@ -175,6 +176,7 @@ export class TweenEx extends Component {
     private _scale: Vec3 = v3(0, 0, 0);
     private _UIOpacity = null;
     private _UITransform = null;
+    private _eulerAngles: Vec3 = v3(0, 0, 0);
 
     onLoad() {
         this.showEasing = this.useEasing ? this.showEasing : TweenEasingType.linear;
@@ -186,6 +188,7 @@ export class TweenEx extends Component {
         }
         this._pos = this.setDefault ? this.defaultVec : this.node.position.clone();
         this._scale = this.setDefault ? this.defaultVec : this.node.scale.clone();
+        this._eulerAngles = this.setDefault ? this.defaultVec : this.node.eulerAngles;
     }
 
     onEnable() {
@@ -265,6 +268,10 @@ export class TweenEx extends Component {
                 tw = tween(this.node)
                     .by(this.duration, { position: this.vec }, ease)
                 break;
+            case TweenType.RotateTo:
+                tw = tween(this.node)
+                    .to(this.duration, { eulerAngles: this.vec }, ease)
+                break;
             default:
                 break;
         }
@@ -291,6 +298,10 @@ export class TweenEx extends Component {
                 tw = tween(this.node)
                     .by(this.duration, { position: v3(-this.vec.x, -this.vec.y, -this.vec.z) }, ease)
                 break;
+            case TweenType.RotateTo:
+                tw = tween(this.node)
+                    .to(this.duration, { eulerAngles: this._eulerAngles }, ease)
+                break;
             default:
                 break;
         }
@@ -313,6 +324,8 @@ export class TweenEx extends Component {
             case TweenType.MoveBy:
                 this.node.position = this.node.position.add(this.vec);
                 break;
+            case TweenType.RotateTo:
+                this.node.eulerAngles = this.vec;
             default:
                 break;
         }
@@ -334,6 +347,8 @@ export class TweenEx extends Component {
             case TweenType.MoveBy:
                 this.node.position = this.node.position.add(this.vec.negative());
                 break;
+            case TweenType.RotateTo:
+                this.node.eulerAngles = this._eulerAngles;
             default:
                 break;
         }
