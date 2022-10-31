@@ -38,6 +38,17 @@ export class AnimEx extends Component {
         }
     }
 
+    play(event: any, v: string = "") {
+        if (event.type === String && v == "") {
+            v = event;
+        }
+        this._anim.play(v);
+    }
+
+    stop() {
+        this._anim.stop();
+    }
+
     onFinish() {
         EventHandler.emitEvents(this.finishedCallback);
     }
