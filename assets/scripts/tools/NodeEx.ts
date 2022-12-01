@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, v3, v2, UITransform, UIOpacity } from 'cc';
+import { _decorator, Component, Node, v3, v2, UITransform, UIOpacity, Button } from 'cc';
 const { ccclass, property, menu } = _decorator;
 
 /* 
@@ -69,6 +69,14 @@ export class NodeEx extends Component {
         let arr = args.split(',');
         if (arr.length > 1)
             this.node.getComponent(arr[0]).enabled = arr[1] == "1";
+    }
+
+    setButtonInteractable(event: any, b: string) {
+        let btn = this.getComponent(Button);
+        if (!!btn) {
+            let args = b || event;
+            btn.interactable = args == 1;
+        }
     }
 
     protected getArgsV3(str: string) {
