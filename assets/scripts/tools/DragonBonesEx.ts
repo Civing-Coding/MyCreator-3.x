@@ -1,9 +1,8 @@
 
-import { _decorator, Component, Node, dragonBones, EventHandler, CCBoolean, CCString, Enum, ccenum } from 'cc';
-const { ccclass, property, requireComponent, menu } = _decorator;
+import { _decorator, Component, Node, dragonBones, EventHandler, CCBoolean, CCString, Enum, ccenum, log } from 'cc';
+const { ccclass, property, requireComponent } = _decorator;
 
 @ccclass('DragonBonesEx')
-@menu('Tools/DragonBonesEx')
 @requireComponent(dragonBones.ArmatureDisplay)
 export class DragonBonesEx extends Component {
 
@@ -34,6 +33,16 @@ export class DragonBonesEx extends Component {
         } else if (event.type == dragonBones.EventObject.LOOP_COMPLETE) {
             EventHandler.emitEvents(this.loopCompleteCallback);
         }
+    }
+
+    playAnim(event: any, anim: string) {
+        if (anim === undefined) anim = event;
+        let list = anim.split(',');
+        this._armatureDisplay.playAnimation(list[0], list.length > 0 ? parseInt(list[1], 10) : -1);
+    }
+
+    setTimeScale(event: EventHandler, args: string) {
+        this._armatureDisplay.timeScale = parseFloat(args);
     }
 }
 
