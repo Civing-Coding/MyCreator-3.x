@@ -14,6 +14,9 @@ export class MutexControl extends Component {
     onChangeEvent: EventHandler[] = [];
 
     @property
+    useTween: boolean = false;
+
+    @property
     defaultShow: boolean = true;
 
     private _curIndex: string = null;
@@ -73,7 +76,8 @@ export class MutexControl extends Component {
         id = id || '-1';
         id = Number(id) >= this.objList.length - 1 ? '-1' : id;
         id = String(Number(id) + 1);
-        this.selectItemTween(null, id);
+        this.useTween ? this.selectItemTween(null, id) : this.selectItem(null, id);
+
     }
 }
 
