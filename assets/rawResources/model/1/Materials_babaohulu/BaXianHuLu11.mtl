@@ -60,6 +60,12 @@
       "emissiveMap": {
         "__uuid__": "47cdd351-e6dd-4eee-850d-76e354e3a631@6c48a",
         "__expectedType__": "cc.Texture2D"
+      },
+      "emissiveScale": {
+        "__type__": "cc.Vec3",
+        "x": 1,
+        "y": 1,
+        "z": 1
       }
     },
     {},

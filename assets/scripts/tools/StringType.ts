@@ -14,7 +14,7 @@ export class StringType extends Component {
     str: string = '';
 
     @property
-    playOnStart: boolean = false;
+    playOnEnable: boolean = false;
 
     private _lbl: Label = null;
 
@@ -23,10 +23,6 @@ export class StringType extends Component {
         if (!this.str) {
             this.str = this._lbl.string;
         }
-    }
-
-    start() {
-        this.playOnStart && this.excute();
     }
 
     excute(str: string = '') {
@@ -45,5 +41,6 @@ export class StringType extends Component {
 
     onEnable() {
         this.unscheduleAllCallbacks();
+        this.playOnEnable && this.excute();
     }
 }
