@@ -93,9 +93,9 @@ export default class PPTLayer extends Component {
             newPage.setSiblingIndex(1);
             pageOld.setSiblingIndex(0);
             maskTransform.width = 0;
+            let oldPos = pageOld.worldPosition.clone();
             newPage.parent = this.maskNode;
-            newPage.worldPosition = v3(1624 / 2, 750 / 2);
-            // newPage.eulerAngles = v3(0, 0, 12);
+            newPage.worldPosition = oldPos;
             newPage.setRotationFromEuler(v3(0, 0, 12));
 
             tween(maskTransform)
@@ -137,9 +137,9 @@ export default class PPTLayer extends Component {
             this.maskNode.setSiblingIndex(1);
             let maskTransform = this.maskNode.getComponent(UITransform);
             maskTransform.width = 1800;
+            let oldPos = pageOld.worldPosition.clone();
             pageOld.parent = this.maskNode;
-            pageOld.worldPosition = v3(1624 / 2, 750 / 2);
-            // pageOld.eulerAngles = v3(0, 0, 12);
+            pageOld.worldPosition = oldPos;
             pageOld.setRotationFromEuler(v3(0, 0, 12));
             tween(maskTransform)
                 .delay(0.16)
