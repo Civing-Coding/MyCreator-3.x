@@ -39,6 +39,7 @@ export class AudioSourceEx extends AudioSource {
     }
 
     onDisable() {
+        super.onDisable();
         this.node.off(AudioSource.EventType.STARTED, this.onAudioStarted, this);
         this.node.off(AudioSource.EventType.ENDED, this.onAudioEnded, this);
     }
