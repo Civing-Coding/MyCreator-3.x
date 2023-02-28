@@ -1,4 +1,4 @@
-import { BaseNode, Color, director, dynamicAtlasManager, ImageAsset, SpriteFrame, Texture2D, v2, Vec2, Node, assetManager, math, v3 } from "cc";
+import { BaseNode, Color, director, dynamicAtlasManager, ImageAsset, SpriteFrame, Texture2D, v2, Vec2, Node, assetManager, math, v3, gfx } from "cc";
 
 export class Utils {
 

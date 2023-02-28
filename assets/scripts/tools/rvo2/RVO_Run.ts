@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, instantiate, v3, EventTouch, UITransform, Sprite, v2 } from 'cc';
+import { _decorator, Component, Node, instantiate, v3, EventTouch, UITransform, Sprite, v2, Color } from 'cc';
 
 import Simulator from "./Simulator"
 import RVOMath from "./RVOMath"
@@ -16,18 +16,18 @@ export class RVO_Run extends Component {
     @property(Node)
     obNode: Node = null;
 
-    public simulator = null;
+    public simulator: Simulator = null;
 
     start() {
         this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.simulator = new Simulator();
         this.simulator.setTimeStep(0.02);
-        this.simulator.setAgentDefaults(50, 10, 10, 1, 2, 100, new Vector2D(0, 0));
+        this.simulator.setAgentDefaults(50, 10, 10, 1, 2, 100);
 
-        let counts = 1000
+        let counts = 10
         for (let i = 0; i < counts; i++) {
-            let x = Math.random() * 500 - 250;
-            let y = Math.random() * 500 - 250;
+            let x = Math.random() * 200 - 100;
+            let y = Math.random() * 200 - 100;
             this.simulator.addAgent(null);
             this.simulator.setAgentPosition(i, x, y);
             let ag = instantiate(this.agentPb);
@@ -40,10 +40,10 @@ export class RVO_Run extends Component {
             let uiOb = obs[i].getComponent(UITransform);
             let rt = uiOb.getBoundingBox();
             let obList = [];
-            obList.push(new Vector2D(rt.xMin, rt.yMax));
             obList.push(new Vector2D(rt.xMax, rt.yMax));
-            obList.push(new Vector2D(rt.xMax, rt.yMin));
+            obList.push(new Vector2D(rt.xMin, rt.yMax));
             obList.push(new Vector2D(rt.xMin, rt.yMin));
+            obList.push(new Vector2D(rt.xMax, rt.yMin));
             this.simulator.addObstacle(obList);
         }
 
@@ -76,7 +76,7 @@ export class RVO_Run extends Component {
         let uip = e.getUILocation();
         let ap = this.node.getComponent(UITransform).convertToNodeSpaceAR(v3(uip.x, uip.y, 0));
         for (let i = 0; i < this.simulator.getNumAgents(); i++) {
-            let p = Utils.getCirclePoint(v2(ap.x, ap.y), 800, 360 / this.simulator.getNumAgents() * i);
+            let p = Utils.getCirclePoint(v2(ap.x, ap.y), 100, 360 / this.simulator.getNumAgents() * i);
             this.simulator.setAgentGoal(i, p.x, p.y);
         }
         this.schedule(this.step, 0.02);
