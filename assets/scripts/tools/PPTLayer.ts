@@ -36,26 +36,17 @@ export default class PPTLayer extends Component {
 
     onLoad() {
         EventManager.getInstance().on("NEXTLAYER", this.nextLayer.bind(this));
-        EventManager.getInstance().on("LASTLAYER", this.nextLayer.bind(this));
-        this.preLoad(this._curIndex);
+        EventManager.getInstance().on("LASTLAYER", this.lastLayer.bind(this));
     }
 
     start() {
         this.setToLayer(this._curIndex).then((nd: Node) => {
+            resources.load(`ppt/ppt${this._curIndex + 1}`);
             this._curPage = nd;
         })
     }
 
-    preLoad(index: number) {
-        resources.load(`ppt/ppt${index}`);
-        resources.load(`ppt/ppt${index + 1}`);
-        resources.load(`ppt/ppt${index - 1}`);
-        resources.release(`ppt/ppt${index + 2}`);
-        resources.release(`ppt/ppt${index - 2}`);
-    }
-
     setToLayer(index: number) {
-        this.preLoad(index);
         return new Promise((resolve, reject) => {
             resources.load(`ppt/ppt${index}`, (err, asset: Prefab) => {
                 if (err) {
@@ -78,15 +69,18 @@ export default class PPTLayer extends Component {
         !!this.lastBtn && (this.lastBtn.node.active = false);
 
         this._timeDetal = true;
-        this.scheduleOnce(() => {
-            !!this.nextBtn && (this.nextBtn.node.active = true);
-            !!this.lastBtn && (this.lastBtn.node.active = true);
-            this._timeDetal = false;
-        }, 1.2);
 
-        this.playerAnim.play('pptReverse');
         let pageOld = this._curPage;
         this.setToLayer(this._curIndex - 1).then((nd: Node) => {
+
+            this.scheduleOnce(() => {
+                !!this.nextBtn && (this.nextBtn.node.active = true);
+                !!this.lastBtn && (this.lastBtn.node.active = true);
+                this._timeDetal = false;
+            }, 1.2);
+
+            this.playerAnim.play('pptReverse');
+
             let newPage = nd;
             newPage.active = true;
             let maskTransform = this.maskNode.getComponent(UITransform);
@@ -122,15 +116,18 @@ export default class PPTLayer extends Component {
         !!this.lastBtn && (this.lastBtn.node.active = false);
 
         this._timeDetal = true;
-        this.scheduleOnce(() => {
-            !!this.nextBtn && (this.nextBtn.node.active = true);
-            !!this.lastBtn && (this.lastBtn.node.active = true);
-            this._timeDetal = false;
-        }, 1.2);
 
-        this.playerAnim.play('ppt');
         let pageOld = this._curPage;
         this.setToLayer(this._curIndex + 1).then((nd: Node) => {
+
+            this.scheduleOnce(() => {
+                !!this.nextBtn && (this.nextBtn.node.active = true);
+                !!this.lastBtn && (this.lastBtn.node.active = true);
+                this._timeDetal = false;
+            }, 1.2);
+
+            this.playerAnim.play('ppt');
+
             let newPage = nd;
             newPage.active = true;
             this.layer.setSiblingIndex(0);
@@ -149,6 +146,7 @@ export default class PPTLayer extends Component {
                     newPage.parent = this.layer;
                     this._curPage = newPage;
                     this._curIndex++;
+                    resources.load(`ppt/ppt${this._curIndex + 1}`);
                 })
                 .start();
         })

@@ -121,7 +121,7 @@ export class RecastControl extends Component {
             const mr = meshRenders[i];
             const mr_sms = mr.model.subModels;
             for (let j in mr_sms) {
-                const mr_gInfo = mr_sms[j].subMesh.geometricInfo; 
+                const mr_gInfo = mr_sms[j].subMesh.geometricInfo;
                 const worldMatrix = meshRenders[i].node.getWorldMatrix();
                 for (let is in mr_gInfo.indices) {
                     indices.push(mr_gInfo.indices[is] + offset);

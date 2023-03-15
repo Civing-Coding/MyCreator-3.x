@@ -2,7 +2,7 @@
   "ver": "1.0.25",
   "importer": "image",
   "imported": true,
-  "uuid": "47cdd351-e6dd-4eee-850d-76e354e3a631",
+  "uuid": "aaf72812-2f49-4ef9-b889-12d01dfc6673",
   "files": [
     ".jpg",
     ".json"
@@ -10,7 +10,7 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "47cdd351-e6dd-4eee-850d-76e354e3a631@6c48a",
+      "uuid": "aaf72812-2f49-4ef9-b889-12d01dfc6673@6c48a",
       "displayName": "BaXianHuLu_10__BaseColor",
       "id": "6c48a",
       "name": "texture",
@@ -22,7 +22,7 @@
         "mipfilter": "none",
         "anisotropy": 0,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "47cdd351-e6dd-4eee-850d-76e354e3a631",
+        "imageUuidOrDatabaseUri": "aaf72812-2f49-4ef9-b889-12d01dfc6673",
         "visible": true
       },
       "ver": "1.0.22",
@@ -36,7 +36,7 @@
   "userData": {
     "hasAlpha": false,
     "type": "texture",
-    "redirect": "47cdd351-e6dd-4eee-850d-76e354e3a631@6c48a",
+    "redirect": "aaf72812-2f49-4ef9-b889-12d01dfc6673@6c48a",
     "fixAlphaTransparencyArtifacts": false
   }
 }

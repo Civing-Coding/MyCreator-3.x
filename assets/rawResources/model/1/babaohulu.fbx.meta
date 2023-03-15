@@ -2,12 +2,12 @@
   "ver": "2.3.1",
   "importer": "fbx",
   "imported": true,
-  "uuid": "1bcfa2aa-2014-4e0d-9886-9a38244e96fa",
+  "uuid": "280008ab-ab69-474d-9164-5dda7eaaf62b",
   "files": [],
   "subMetas": {
     "d6218": {
       "importer": "gltf-mesh",
-      "uuid": "1bcfa2aa-2014-4e0d-9886-9a38244e96fa@d6218",
+      "uuid": "280008ab-ab69-474d-9164-5dda7eaaf62b@d6218",
       "displayName": "",
       "id": "d6218",
       "name": "BaXianHuLu.mesh",
@@ -24,7 +24,7 @@
     },
     "fb946": {
       "importer": "gltf-scene",
-      "uuid": "1bcfa2aa-2014-4e0d-9886-9a38244e96fa@fb946",
+      "uuid": "280008ab-ab69-474d-9164-5dda7eaaf62b@fb946",
       "displayName": "",
       "id": "fb946",
       "name": "babaohulu.prefab",
@@ -42,18 +42,18 @@
   "userData": {
     "imageMetas": [],
     "legacyFbxImporter": false,
-    "redirect": "1bcfa2aa-2014-4e0d-9886-9a38244e96fa@fb946",
+    "redirect": "280008ab-ab69-474d-9164-5dda7eaaf62b@fb946",
     "assetFinder": {
       "meshes": [
-        "1bcfa2aa-2014-4e0d-9886-9a38244e96fa@d6218"
+        "280008ab-ab69-474d-9164-5dda7eaaf62b@d6218"
       ],
       "skeletons": [],
       "textures": [],
       "materials": [
-        "006aa6d4-14b5-4d87-bc82-3ff3ec354696"
+        "05eb50ab-babc-454f-92bc-0be7bfa1e69f"
       ],
       "scenes": [
-        "1bcfa2aa-2014-4e0d-9886-9a38244e96fa@fb946"
+        "280008ab-ab69-474d-9164-5dda7eaaf62b@fb946"
       ]
     },
     "dumpMaterials": true,

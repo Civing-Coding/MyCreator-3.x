@@ -34,6 +34,7 @@ export class RecastConfig extends Component {
     borderSize: number = 0;
     @property({ tooltip: '注意添加的“tileSize”参数。这是以世界单位表示的每个地块的尺寸。如果不提供这个参数或者把它设为0，则导航网格将回退回基础模式，并且障碍物不会生效。另外，取决于你的使用场景，这个值必须被仔细选择，在更多的地块和更高的cpu更新密度间取舍' })
     tileSize: number = 0;
+
 }
 
 
