@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, Enum, EventHandler, CCInteger } from 'cc';
+import { _decorator, Component, Node, Enum, EventHandler, CCInteger, EventTouch } from 'cc';
 const { ccclass, property, menu } = _decorator;
 
 const CounterType = Enum({
@@ -33,8 +33,8 @@ export class Counter extends Component {
         this.check();
     }
 
-    addObj(obj: any) {
-        this._obj.add(obj);
+    addObj(obj: EventTouch) {
+        this._obj.add(obj.currentTarget || obj);
         this.check();
     }
 
