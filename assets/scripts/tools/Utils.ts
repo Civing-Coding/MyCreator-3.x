@@ -405,7 +405,7 @@ export class Utils {
      * @param resArr 该条贝塞尔曲线上的点（二维坐标）
      */
     static getBezierPos(ctrlPosArr: Array<Vec2>, precison: number): Array<Vec2> {
-        console.log(ctrlPosArr)
+        // console.log(ctrlPosArr)
         let resArr: Array<Vec2> = new Array<Vec2>();
         /**贝塞尔曲线控制点数目（阶数）*/
         let number: number = ctrlPosArr.length;
@@ -454,7 +454,7 @@ export class Utils {
                 }
             }
         }
-        console.log(yangHuiArr);
+        // console.log(yangHuiArr);
         return yangHuiArr;
     }
 }

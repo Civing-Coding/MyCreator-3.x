@@ -28,8 +28,8 @@ export class WebVideoPlayer extends Component {
     private _video_element: HTMLVideoElement;
     private _canvas_element: HTMLCanvasElement;
     private _ctx: CanvasRenderingContext2D;
-    private _allowUpdate = false;
     private _img = new ImageAsset();
+    private _spriteFrame = null;
 
     onEnable() {
         this._video_element = document.createElement('video') as HTMLVideoElement;
@@ -44,25 +44,26 @@ export class WebVideoPlayer extends Component {
         this._canvas_element.width = this.videoWidth;
         this._canvas_element.height = this.videoHeight;
         this._ctx = this._canvas_element.getContext('2d');
-        this._allowUpdate = false;
     }
 
     onCanPlay(e: Event) {
         const video = e.target as HTMLVideoElement;
         if (video.readyState == 1 || video.readyState == 4) {
-            this._allowUpdate = true;
-        }
-    }
-
-    update(dt: number) {
-        if (this._allowUpdate) {
-            this._ctx.drawImage(this._video_element, 0, 0, this.videoWidth, this.videoHeight);
-            let b64 = this._canvas_element.toDataURL("image/png");
-            let img = new Image();
-            img.src = b64;
-            img.onload = () => {
-                this._img.reset(img);
-                this.uiSprite.spriteFrame = SpriteFrame.createWithImage(this._img);
+            this._video_element.ontimeupdate = () => {
+                this._ctx.drawImage(this._video_element, 0, 0, this.videoWidth, this.videoHeight);
+                let b64 = this._canvas_element.toDataURL("image/jpeg", 1);
+                // this._canvas_element.toBlob((blob) => {
+                let img = new Image();
+                img.src = b64
+                // img.src = window.URL.createObjectURL(blob);
+                img.onload = () => {
+                    b64 = null;
+                    // blob = null;
+                    this._img.reset(img);
+                    img = null;
+                    this.uiSprite.spriteFrame = SpriteFrame.createWithImage(this._img);
+                };
+                // }, 'image/jpeg', 1);
             };
         }
     }
@@ -83,7 +84,6 @@ export class WebVideoPlayer extends Component {
     }
 
     onDisable() {
-        this._allowUpdate = false;
         this._ctx = null;
         delete (this._video_element);
         delete (this._canvas_element);
