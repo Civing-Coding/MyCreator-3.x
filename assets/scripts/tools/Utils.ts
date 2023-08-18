@@ -1,4 +1,4 @@
-import { BaseNode, Color, director, dynamicAtlasManager, ImageAsset, SpriteFrame, Texture2D, v2, Vec2, Node, assetManager, math, v3, gfx } from "cc";
+import { Color, director, dynamicAtlasManager, ImageAsset, SpriteFrame, Texture2D, v2, Vec2, Node, assetManager, math, v3, gfx, Button } from "cc";
 
 export class Utils {
 
@@ -456,5 +456,16 @@ export class Utils {
         }
         // console.log(yangHuiArr);
         return yangHuiArr;
+    }
+
+    static SetButtonSound(func: Function): void {
+        if (Button.prototype["touchBeganClone"]) return;
+        Button.prototype["touchBeganClone"] = Button.prototype["_onTouchEnded"];
+        Button.prototype["_onTouchEnded"] = function (event) {
+            if (this.interactable && this.enabledInHierarchy) {
+                func();
+            }
+            this.touchBeganClone(event);
+        }
     }
 }

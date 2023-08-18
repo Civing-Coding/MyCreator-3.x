@@ -1,5 +1,5 @@
 {
-  "ver": "2.3.1",
+  "ver": "2.3.8",
   "importer": "fbx",
   "imported": true,
   "uuid": "280008ab-ab69-474d-9164-5dda7eaaf62b",
@@ -12,9 +12,10 @@
       "id": "d6218",
       "name": "BaXianHuLu.mesh",
       "userData": {
-        "gltfIndex": 0
+        "gltfIndex": 0,
+        "triangleCount": 102574
       },
-      "ver": "1.1.0",
+      "ver": "1.1.1",
       "imported": true,
       "files": [
         ".bin",
@@ -31,7 +32,7 @@
       "userData": {
         "gltfIndex": 0
       },
-      "ver": "1.0.12",
+      "ver": "1.0.14",
       "imported": true,
       "files": [
         ".json"
@@ -60,7 +61,26 @@
     "materialDumpDir": "db://assets/rawResources/model/1/Materials_babaohulu",
     "fbx": {
       "preferLocalTimeSpan": false,
-      "smartMaterialEnabled": false
+      "smartMaterialEnabled": false,
+      "matchMeshNames": false
+    },
+    "lods": {
+      "enable": false,
+      "hasBuiltinLOD": false,
+      "options": [
+        {
+          "screenRatio": 0.25,
+          "faceCount": 1
+        },
+        {
+          "screenRatio": 0.125,
+          "faceCount": 0.25
+        },
+        {
+          "screenRatio": 0.01,
+          "faceCount": 0.1
+        }
+      ]
     }
   }
 }
