@@ -23,7 +23,7 @@ export class Counter extends Component {
     private _index: number = 0;
     private _obj: Set<any> = new Set<any>();
 
-    rest() {
+    reset() {
         this._index = 0;
         this._obj = new Set<any>();
     }
