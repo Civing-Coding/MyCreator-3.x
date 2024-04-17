@@ -1,0 +1,69 @@
+// https://www.shadertoy.com/view/4ssyzj
+
+CCEffect %{
+techniques:
+  - name: opaque
+    passes:
+      - vert: loading7-vs:vert # builtin header
+        frag: loading7-fs:frag
+        blendState:
+          targets:
+            - blend: true
+              blendSrc: src_alpha
+              blendDst: one_minus_src_alpha
+              blendSrcAlpha: src_alpha
+              blendDstAlpha: one_minus_src_alpha
+        properties:
+          color: { value: [0.12, 0.12, 0.12, 1.0], editor: { type: color } }
+
+}%
+
+CCProgram loading7-vs %{
+precision highp float;
+#include <builtin/uniforms/cc-global>
+
+in vec3 a_position;
+in vec2 a_texCoord;
+in vec4 a_color;
+
+out vec4 v_color;
+out vec2 v_uv;
+
+vec4 vert() {
+  vec4 pos = vec4(a_position, 1);
+  pos = cc_matViewProj * pos;
+  v_uv = a_texCoord;
+  v_color = a_color;
+  return pos;
+}
+}%
+
+CCProgram loading7-fs %{
+precision highp float;
+#include <legacy/output>
+
+in vec2 v_uv;
+in vec3 v_color;
+
+uniform Constant {
+  vec4 color;
+};
+
+#define pi 3.1415
+#define R 0.6
+#define RT 0.1
+#define FADE 0.05
+
+vec4 frag() {
+  vec4 col = vec4(1.0);
+  vec2 uv = v_uv - 0.5;
+  float t = sin(cc_time.x * pi);
+  uv *= 2.0 + 0.5 * t;
+  float d = length(uv);
+  float step = smoothstep((RT + FADE) / 2.0, FADE / 2.0, abs(d - R + (RT / 2.0 + FADE / 2.0)));
+  col.rgb += step;
+  col.rgb *= color.rgb;
+  col.a *= step;
+  return CCFragOutput(col);
+}
+}%

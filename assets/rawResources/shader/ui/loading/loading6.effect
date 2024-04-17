@@ -1,0 +1,71 @@
+// https://www.cnblogs.com/hggzhang/p/17319820.html
+
+CCEffect %{
+techniques:
+  - name: opaque
+    passes:
+      - vert: loading6-vs:vert # builtin header
+        frag: loading6-fs:frag
+        blendState:
+          targets:
+            - blend: true
+              blendSrc: src_alpha
+              blendDst: one_minus_src_alpha
+              blendSrcAlpha: src_alpha
+              blendDstAlpha: one_minus_src_alpha
+        properties:
+          endColor: { value: [0.12, 0.12, 0.12, 1.0], editor: { type: color } }
+          startColor: { value: [0.2, 0.4, 0.7, 1.0], editor: { type: color } }
+
+}%
+
+CCProgram loading6-vs %{
+precision highp float;
+#include <builtin/uniforms/cc-global>
+
+in vec3 a_position;
+in vec2 a_texCoord;
+in vec4 a_color;
+
+out vec4 v_color;
+out vec2 v_uv;
+
+vec4 vert() {
+  vec4 pos = vec4(a_position, 1);
+  pos = cc_matViewProj * pos;
+  v_uv = a_texCoord;
+  v_color = a_color;
+  return pos;
+}
+}%
+
+CCProgram loading6-fs %{
+precision highp float;
+#include <legacy/output>
+
+in vec2 v_uv;
+in vec3 v_color;
+
+uniform Constant {
+  vec4 endColor;
+  vec4 startColor;
+};
+
+#define pi 3.1415
+#define R 0.5
+#define RT 0.1
+#define FADE 0.05
+
+vec4 frag() {
+  vec4 col = vec4(1.0);
+  vec2 uv = vec2(v_uv.x - 0.5, - v_uv.y + 0.5);
+  float q = smoothstep(0.0, 1.0, mod(cc_time.x / 15.0, 0.1) / 0.1);
+  float m = clamp(length(uv) * 10.0, 0.0, 1.0);
+  if (abs(length(uv) - q / 5.0) < 0.005) {
+    col = vec4(mix(endColor.rgb, startColor.rgb, m), 1.0);
+  }else {
+    col = vec4(0.0);
+  }
+  return CCFragOutput(col);
+}
+}%

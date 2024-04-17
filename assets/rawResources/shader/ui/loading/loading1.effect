@@ -1,0 +1,77 @@
+//https://blog.csdn.net/chooselove/article/details/106361062
+
+CCEffect %{
+techniques:
+  - name: opaque
+    passes:
+      - vert: loading1-vs:vert # builtin header
+        frag: loading1-fs:frag
+        blendState:
+          targets:
+            - blend: true
+              blendSrc: src_alpha
+              blendDst: one_minus_src_alpha
+              blendSrcAlpha: src_alpha
+              blendDstAlpha: one_minus_src_alpha
+        properties:
+          mainTexture: { value: white }
+          radius: { value: 0.3, editor: { type: float } }
+          width: { value: 0.1, editor: { type: float } }
+          speed: { value: 1.0, editor: { type: float } }
+          color1: { value: [1, 1, 1, 1], editor: { type: color } }
+          color2: { value: [0, 0, 0, 1], editor: { type: color } }
+
+}%
+
+CCProgram loading1-vs %{
+precision highp float;
+#include <builtin/uniforms/cc-global>
+
+in vec3 a_position;
+in vec2 a_texCoord;
+in vec4 a_color;
+
+out vec4 v_color;
+out vec2 v_uv;
+
+vec4 vert() {
+  vec4 pos = vec4(a_position, 1);
+  pos = cc_matViewProj * pos;
+  v_uv = a_texCoord;
+  v_color = a_color;
+  return pos;
+}
+}%
+
+CCProgram loading1-fs %{
+precision highp float;
+#include <legacy/output>
+
+in vec2 v_uv;
+in vec3 v_color;
+
+uniform sampler2D mainTexture;
+
+uniform Constant {
+  vec4 color1;
+  vec4 color2;
+  float radius;
+  float width;
+  float speed;
+};
+
+#define outDt 0.05 //避免边缘锯齿
+
+vec4 frag() {
+  vec2 uv = vec2(v_uv.x - 0.5, - v_uv.y + 0.5);
+  float ring = (1.0 - smoothstep(radius, radius + outDt, length(uv))) * smoothstep(radius - width - outDt, radius - width, length(uv));
+  float angle = cc_time.x * speed;
+  vec2 uv1 = vec2(cos(angle) * uv.x - sin(angle) * uv.y, sin(angle) * uv.x + cos(angle) * uv.y);
+  float alpha = atan(uv1.x, uv1.y);
+  alpha = clamp(alpha * 0.2 + 0.6, 0.0, 1.0);
+  float circle = 1.0 - smoothstep(width * 0.55, width * 0.55 + outDt, length(uv1 - vec2(0.0, - radius + width * 0.55)));
+  alpha = max(alpha, circle) * ring;
+  vec4 col = vec4(mix(color2.rgb, color1.rgb, alpha), alpha);
+  return CCFragOutput(col);
+}
+}%

@@ -1,0 +1,72 @@
+// https://www.shadertoy.com/view/Xdc3WX
+
+CCEffect %{
+techniques:
+  - name: opaque
+    passes:
+      - vert: loading5-vs:vert # builtin header
+        frag: loading5-fs:frag
+        blendState:
+          targets:
+            - blend: true
+              blendSrc: src_alpha
+              blendDst: one_minus_src_alpha
+              blendSrcAlpha: src_alpha
+              blendDstAlpha: one_minus_src_alpha
+        properties:
+          speed: { value: 5.0, editor: { type: float } }
+          color: { value: [1.0, 0.0, 0.5, 1.0], editor: { type: color } }
+
+}%
+
+CCProgram loading5-vs %{
+precision highp float;
+#include <builtin/uniforms/cc-global>
+
+in vec3 a_position;
+in vec2 a_texCoord;
+in vec4 a_color;
+
+out vec4 v_color;
+out vec2 v_uv;
+
+vec4 vert() {
+  vec4 pos = vec4(a_position, 1);
+  pos = cc_matViewProj * pos;
+  v_uv = a_texCoord;
+  v_color = a_color;
+  return pos;
+}
+}%
+
+CCProgram loading5-fs %{
+precision highp float;
+#include <legacy/output>
+
+in vec2 v_uv;
+in vec3 v_color;
+
+uniform Constant {
+  vec4 color;
+  float speed;
+};
+
+#define pi 3.1415
+#define radius 0.04
+#define dotsnb 10.0
+vec4 frag() {
+  vec3 col = vec3(0.0);
+  float x, y = 0.0;
+  
+  for(float i = 0.0 ; i < dotsnb ; i ++ ) {
+    x = 0.3 * cos(2.0 * pi * i / dotsnb + cc_time.x * (i + 3.0) / 3.0);
+    y = 0.3 * sin(2.0 * pi * i / dotsnb + cc_time.x * (i + 3.0) / 3.0);
+    
+    col += vec3(smoothstep(radius, radius - 0.01, distance(v_uv, 0.5 + vec2(x, y))) * (sin(i / dotsnb + cc_time.x + 2.0 * pi / 3.0) + 1.0) / 2.0,
+    smoothstep(radius, radius - 0.01, distance(v_uv, 0.5 + vec2(x, y))) * (sin(i / dotsnb + cc_time.x + 4.0 * pi / 3.0) + 1.0) / 2.0,
+    smoothstep(radius, radius - 0.01, distance(v_uv, 0.5 + vec2(x, y))) * (sin(i / dotsnb + cc_time.x + 6.0 * pi / 3.0) + 1.0) / 2.0);
+  }
+  
+  return CCFragOutput(vec4(col, 1.0));
+}
+}%

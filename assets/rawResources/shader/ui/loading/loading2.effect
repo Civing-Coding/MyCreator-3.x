@@ -1,0 +1,88 @@
+// https://www.shadertoy.com/view/tscSz7
+
+CCEffect %{
+techniques:
+  - name: opaque
+    passes:
+      - vert: loading2-vs:vert # builtin header
+        frag: loading2-fs:frag
+        blendState:
+          targets:
+            - blend: true
+              blendSrc: src_alpha
+              blendDst: one_minus_src_alpha
+              blendSrcAlpha: src_alpha
+              blendDstAlpha: one_minus_src_alpha
+        properties:
+          colorTop: { value: [0.3, 0.6, 1.0, 1.0], editor: { type: color } }
+          colorBottom: { value: [1.0, 0.4, 0.3, 0.1], editor: { type: color } }
+
+}%
+
+CCProgram loading2-vs %{
+precision highp float;
+#include <builtin/uniforms/cc-global>
+
+in vec3 a_position;
+in vec2 a_texCoord;
+in vec4 a_color;
+
+out vec4 v_color;
+out vec2 v_uv;
+
+vec4 vert() {
+  vec4 pos = vec4(a_position, 1);
+  pos = cc_matViewProj * pos;
+  v_uv = a_texCoord;
+  v_color = a_color;
+  return pos;
+}
+}%
+
+CCProgram loading2-fs %{
+precision highp float;
+#include <legacy/output>
+
+in vec2 v_uv;
+in vec3 v_color;
+
+uniform Constant {
+  vec4 colorTop;
+  vec4 colorBottom;
+};
+
+#define pi 3.1415
+#define dots 14
+#define dotsOffset 0.3
+#define speed 0.2
+#define power 3.0
+
+float smin(float a, float b, float k)
+{
+  float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
+  return mix(b, a, h) - k*h * (1.0 - h);
+}
+
+float lerp(float t, float v0, float v1) {
+  return (1.0 - t) * v0 + t * v1;
+}
+
+vec4 frag() {
+  vec2 uv = vec2(v_uv.x - 0.5, - v_uv.y + 0.5);
+  float d = 9999.0;
+  vec4 col = vec4(1.0, 1.0, 1.0, 1.0);
+  for(int i = 0; i < dots; i ++ ) {
+    float t = pow(fract(cc_time.x * speed + (float(i) * dotsOffset)), power);
+    float s = pi * 2.0;
+    vec2 o = vec2(sin(t * s), cos(t * s)) * 0.2;
+    float dist = length(uv + o) - 0.01;
+    if (dist < d) {
+      col = vec4(mix(colorTop.rgb, colorBottom.rgb, cos(t * s) * 0.5 + 0.5), 1.0);
+    }
+    d = smin(d, dist, 0.04);
+  }
+  
+  col = mix(col, vec4(1.0, 1.0, 0.9, 0.0), smoothstep(0.0, 0.005, d));
+  return CCFragOutput(col);
+}
+}%

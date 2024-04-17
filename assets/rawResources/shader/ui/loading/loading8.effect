@@ -1,0 +1,82 @@
+//https://www.shadertoy.com/view/XtsfRs
+CCEffect %{
+techniques:
+  - name: opaque
+    passes:
+      - vert: loading8-vs:vert # builtin header
+        frag: loading8-fs:frag
+        blendState:
+          targets:
+            - blend: true
+              blendSrc: src_alpha
+              blendDst: one_minus_src_alpha
+              blendSrcAlpha: src_alpha
+              blendDstAlpha: one_minus_src_alpha
+        properties:
+          color: { value: [0.12, 0.12, 0.12, 1.0], editor: { type: color } }
+
+}%
+
+CCProgram loading8-vs %{
+precision highp float;
+#include <builtin/uniforms/cc-global>
+
+in vec3 a_position;
+in vec2 a_texCoord;
+in vec4 a_color;
+
+out vec4 v_color;
+out vec2 v_uv;
+
+vec4 vert() {
+  vec4 pos = vec4(a_position, 1);
+  pos = cc_matViewProj * pos;
+  v_uv = a_texCoord;
+  v_color = a_color;
+  return pos;
+}
+}%
+
+CCProgram loading8-fs %{
+precision highp float;
+#include <legacy/output>
+
+in vec2 v_uv;
+in vec3 v_color;
+
+uniform Constant {
+  vec4 color;
+};
+
+#define pi 3.1415
+#define tailLength 300
+#define particleSize 0.03
+
+vec2 dotCoordinates(float radius, vec2 offset, float t)
+{
+  vec2 pos;
+  pos.x = offset.x + radius * cos(t);
+  pos.y = offset.y + radius * sin(t) * cos(t);
+  return pos;
+}
+
+vec4 frag() {
+  vec4 col = vec4(0.0);
+  for(int h = tailLength; h > 0; h -- )
+  {
+    vec2 rightDot = dotCoordinates(0.45, vec2(0.5, 0.5), cc_time.x - (0.02 * float(h)));
+    vec2 leftDot = dotCoordinates(-0.45, vec2(0.5, 0.5), cc_time.x - (0.02 * float(h)));
+    float d = distance(leftDot, v_uv);
+    if (d < particleSize)
+    {
+      col = vec4(v_uv.x, v_uv.y, 0.8 + 0.2 * sin(cc_time.x), 1.0) - float(h) / float(tailLength);
+    }
+    d = distance(rightDot, v_uv);
+    if (d < particleSize)
+    {
+      col = vec4(v_uv.x, v_uv.y, 0.8 + 0.2 * sin(cc_time.x), 1.0) - float(h) / float(tailLength);
+    }
+  }
+  return CCFragOutput(col);
+}
+}%

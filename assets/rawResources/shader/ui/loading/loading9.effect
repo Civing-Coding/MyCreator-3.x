@@ -1,0 +1,96 @@
+// https://www.shadertoy.com/view/4ssyzj
+
+CCEffect %{
+techniques:
+  - name: opaque
+    passes:
+      - vert: loading7-vs:vert # builtin header
+        frag: loading7-fs:frag
+        blendState:
+          targets:
+            - blend: true
+              blendSrc: src_alpha
+              blendDst: one_minus_src_alpha
+              blendSrcAlpha: src_alpha
+              blendDstAlpha: one_minus_src_alpha
+        properties:
+          color: { value: [0.12, 0.12, 0.12, 1.0], editor: { type: color } }
+
+}%
+
+CCProgram loading7-vs %{
+precision highp float;
+#include <builtin/uniforms/cc-global>
+
+in vec3 a_position;
+in vec2 a_texCoord;
+in vec4 a_color;
+
+out vec4 v_color;
+out vec2 v_uv;
+
+vec4 vert() {
+  vec4 pos = vec4(a_position, 1);
+  pos = cc_matViewProj * pos;
+  v_uv = a_texCoord;
+  v_color = a_color;
+  return pos;
+}
+}%
+
+CCProgram loading7-fs %{
+precision highp float;
+#include <legacy/output>
+
+in vec2 v_uv;
+in vec3 v_color;
+
+uniform Constant {
+  vec4 color;
+};
+
+#define PI 3.1415
+
+float metaCircle(vec2 uv, vec2 center, float radius) {
+  float offsetX = uv.x - center.x;
+  float offsetY = uv.y - center.y;
+  return sqrt((radius * radius) / (offsetX * offsetX + offsetY * offsetY));
+}
+float meta(vec2 uv, vec3 c1, vec3 c2) {
+  float m1 = metaCircle(uv, c1.xy, c1.z);
+  float m2 = metaCircle(uv, c2.xy, c2.z);
+  return m1 + m2;
+}
+
+vec4 frag() {
+  vec2 uv = v_uv - 0.5;
+  
+  vec2 cA = vec2(0.3 * sin(cc_time.x), 0.0);
+  vec2 cB = vec2(0.3 * sin(cc_time.x + PI * 0.5), 0.0);
+  vec2 cC = vec2(0.3 * sin(cc_time.x + PI), 0.0);
+  
+  float r1 = 0.1 + 0.05 * cos(cc_time.x);
+  float r2 = 0.1 + 0.05 * cos(cc_time.x + PI * 0.5);
+  float r3 = 0.1 + 0.05 * cos(cc_time.x + PI);
+  
+  vec3 colorA = vec3(1.0, 0.0, 0.0);
+  vec3 colorB = vec3(0.0, 1.0, 0.0);
+  vec3 colorC = vec3(0.0, 0.0, 1.0);
+  
+  float perA = metaCircle(uv, cA, r1);
+  float perB = metaCircle(uv, cB, r2);
+  float perC = metaCircle(uv, cC, r3);
+  
+  float m = perA + perB + perC;
+  m = smoothstep(0.9, 1.0, m);
+  
+  //计算了一下受到各个球颜色的影响       
+  //TODO 这个地方有问题，能勉强有效果       
+  float effect1 = length(uv - cA) > r1 ? perA * 1.5 : 1.0;
+  float effect2 = length(uv - cB) > r2 ? perB * 1.5 : 1.0;
+  float effect3 = length(uv - cC) > r3 ? perC * 1.5 : 1.0;
+  
+  vec3 col = ((colorA * effect1) + (colorB * effect2) + (colorC * effect3)) * m;
+  return CCFragOutput(vec4(col, 1.0));
+}
+}%

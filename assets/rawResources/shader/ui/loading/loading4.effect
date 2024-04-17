@@ -1,0 +1,94 @@
+// https://www.shadertoy.com/view/tdlfD7
+
+CCEffect %{
+techniques:
+  - name: opaque
+    passes:
+      - vert: loading4-vs:vert # builtin header
+        frag: loading4-fs:frag
+        blendState:
+          targets:
+            - blend: true
+              blendSrc: src_alpha
+              blendDst: one_minus_src_alpha
+              blendSrcAlpha: src_alpha
+              blendDstAlpha: one_minus_src_alpha
+        properties:
+          speed: { value: 5.0, editor: { type: float } }
+          color: { value: [1.0, 0.0, 0.5, 1.0], editor: { type: color } }
+
+}%
+
+CCProgram loading4-vs %{
+precision highp float;
+#include <builtin/uniforms/cc-global>
+
+in vec3 a_position;
+in vec2 a_texCoord;
+in vec4 a_color;
+
+out vec4 v_color;
+out vec2 v_uv;
+
+vec4 vert() {
+  vec4 pos = vec4(a_position, 1);
+  pos = cc_matViewProj * pos;
+  v_uv = a_texCoord;
+  v_color = a_color;
+  return pos;
+}
+}%
+
+CCProgram loading4-fs %{
+precision highp float;
+#include <legacy/output>
+
+in vec2 v_uv;
+in vec3 v_color;
+
+uniform Constant {
+  vec4 color;
+  float speed;
+};
+
+#define pi 3.1415
+
+vec3 remap(vec2 p, vec2 s, float d) {
+  
+  vec2 q = abs(p);
+  float n = 0.0;
+  //if point closer to left or right side                    
+  if (q.x - s.x > q.y - s.y) {
+    //how far is y coord up edge?                    
+    n = q.y / s.y; //0->1
+    n = sign(p.x) > 0.0 ? sign(p.y) * n*0.125 + 0.125 : sign(p.y) *- n*0.125 + 0.625;
+  }
+  else {
+    n = q.x / s.x;
+    n = sign(p.y) > 0.0 ? sign(p.x) *- n*0.125 + 0.375 : sign(p.x) * n*0.125 + 0.875;
+    
+  }
+  //THIS LINE HERE CREATES THE ROUNDED CAP                    
+  n += sqrt(-(sin(d) * 0.13) + 0.15);
+  //n-=sqrt(-(d*d)+.25)*10000.;                     
+  
+  return fract(n * 3.0 - cc_time.x * speed / 3.0) * 3.0 * (color.rgb);
+}
+
+float sdBox(in vec2 p, float b)
+{
+  vec2 d = abs(p) - b;
+  float c = length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
+  return 1.0 - smoothstep(0.00, 0.01, abs(c));
+}
+
+vec4 frag() {
+  vec2 uv = (v_uv - 0.5) * 0.3;
+  vec2 s = vec2(0.1);
+  float w = 0.01;
+  float d = sdBox(uv, 0.1);
+  vec3 mask = d*remap(uv, s, d / 30.0);
+  
+  return CCFragOutput(vec4(mask, 1.0));
+}
+}%
