@@ -1,16 +1,20 @@
 {
-  "__version__": "1.0.5",
+  "__version__": "1.0.6",
   "general": {
     "designResolution": {
       "fitWidth": false,
       "fitHeight": true,
       "width": 1624,
       "height": 750
-    }
+    },
+    "highQuality": true
   },
   "fbx": {
     "legacyFbxImporter": {
       "visible": true
     }
+  },
+  "script": {
+    "preserveSymlinks": true
   }
 }

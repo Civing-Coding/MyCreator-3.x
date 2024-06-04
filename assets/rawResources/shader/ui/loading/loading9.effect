@@ -24,16 +24,16 @@ precision highp float;
 
 in vec3 a_position;
 in vec2 a_texCoord;
-// in vec4 a_color;
+// in vec4 a_color;  
 
-// out vec4 v_color;
+// out vec4 v_color;  
 out vec2 v_uv;
 
 vec4 vert() {
   vec4 pos = vec4(a_position, 1);
   pos = cc_matViewProj * pos;
   v_uv = a_texCoord;
-  // v_color = a_color;
+  // v_color = a_color;  
   return pos;
 }
 }%
@@ -43,7 +43,7 @@ precision highp float;
 #include <legacy/output>
 
 in vec2 v_uv;
-// in vec3 v_color;
+// in vec3 v_color;  
 
 uniform Constant {
   vec4 color;
@@ -73,9 +73,9 @@ vec4 frag() {
   float r2 = 0.1 + 0.05 * cos(cc_time.x + PI * 0.5);
   float r3 = 0.1 + 0.05 * cos(cc_time.x + PI);
   
-  vec3 colorA = vec3(1.0, 0.0, 0.0);
-  vec3 colorB = vec3(0.0, 1.0, 0.0);
-  vec3 colorC = vec3(0.0, 0.0, 1.0);
+  vec4 colorA = vec4(1.0, 0.0, 0.0, 1.0);
+  vec4 colorB = vec4(0.0, 1.0, 0.0, 1.0);
+  vec4 colorC = vec4(0.0, 0.0, 1.0, 1.0);
   
   float perA = metaCircle(uv, cA, r1);
   float perB = metaCircle(uv, cB, r2);
@@ -84,13 +84,13 @@ vec4 frag() {
   float m = perA + perB + perC;
   m = smoothstep(0.9, 1.0, m);
   
-  //计算了一下受到各个球颜色的影响       
-  //TODO 这个地方有问题，能勉强有效果       
+  //计算了一下受到各个球颜色的影响         
+  //TODO 这个地方有问题，能勉强有效果         
   float effect1 = length(uv - cA) > r1 ? perA * 1.5 : 1.0;
   float effect2 = length(uv - cB) > r2 ? perB * 1.5 : 1.0;
   float effect3 = length(uv - cC) > r3 ? perC * 1.5 : 1.0;
   
-  vec3 col = ((colorA * effect1) + (colorB * effect2) + (colorC * effect3)) * m;
-  return CCFragOutput(vec4(col, 1.0));
+  vec4 col = ((colorA * effect1) + (colorB * effect2) + (colorC * effect3)) * m;
+  return CCFragOutput(col);
 }
 }%

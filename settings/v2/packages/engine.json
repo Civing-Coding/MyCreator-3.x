@@ -1,5 +1,5 @@
 {
-  "__version__": "1.0.7",
+  "__version__": "1.0.9",
   "modules": {
     "cache": {
       "base": {
@@ -120,6 +120,9 @@
       },
       "custom-pipeline": {
         "_value": false
+      },
+      "graphics": {
+        "_value": true
       }
     },
     "flags": {},
@@ -133,6 +136,7 @@
       "gfx-webgl",
       "gfx-webgl2",
       "intersection-2d",
+      "meshopt",
       "particle",
       "primitive",
       "tween",
@@ -142,5 +146,8 @@
       "value": false,
       "version": ""
     }
+  },
+  "macroConfig": {
+    "ENABLE_TRANSPARENT_CANVAS": true
   }
 }
