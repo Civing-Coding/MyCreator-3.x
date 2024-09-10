@@ -33,8 +33,8 @@ export class Counter extends Component {
         this.check();
     }
 
-    addObj(obj: EventTouch) {
-        this._obj.add(obj.currentTarget || obj);
+    addObj(obj: any, args: any) {
+        this._obj.add(args);
         this.check();
     }
 
