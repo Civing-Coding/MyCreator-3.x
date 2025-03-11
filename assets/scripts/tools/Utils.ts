@@ -468,4 +468,30 @@ export class Utils {
             this.touchBeganClone(event);
         }
     }
+
+    /**
+ * 鞋带公式
+ * @param {x: number, y: number}[] points 多边形的顶点坐标数组
+ * @returns {number} 多边形的面积
+ * https://forum.cocos.org/t/topic/165981
+ */
+    static calculateArea(points: any): number {
+
+        if (points.length < 3) return 0;
+
+        let sum = 0;
+        let p1: any;
+        let p2: any;
+        const loopTimes = points.length - 1;
+        for (let i = 0; i < loopTimes; i++) {
+            p1 = points[i];
+            p2 = points[i + 1];
+            sum += (p2.x - p1.x) * (p1.y + p2.y);
+        }
+        p1 = points[0];
+        p2 = points[loopTimes];
+        sum += (p1.x - p2.x) * (p2.y + p1.y);
+        return Math.abs(-sum * 0.5);
+    }
+
 }
